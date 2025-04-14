@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "VideoEffectComponent": {
+      "commandName": "Project",
+      "nativeDebugging": true
+    }
+  }
+}

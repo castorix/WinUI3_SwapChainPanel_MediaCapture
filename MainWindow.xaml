@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window
+    x:Class="WinUI3_SwapChainPanel_MediaCapture.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:WinUI3_SwapChainPanel_MediaCapture"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+    <!--<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Button x:Name="myButton" Click="myButton_Click">Click Me</Button>
+    </StackPanel>-->
+
+    <Grid x:Name="mainGrid">
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="10"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="100"></RowDefinition>
+            <RowDefinition Height="150"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top">
+            <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top">
+                    <TextBlock Margin="10, 18, 0, 0" x:Name="tbDevices">
+                        Devices :
+                    </TextBlock>
+                    <ComboBox x:Name="cmbDevices" Width="280" Margin="10, 8, 0, 0" Height="40" MaxDropDownHeight="400"
+                              ItemsSource="{x:Bind devices, Mode=OneWay}" SelectionChanged="cmbDevices_SelectionChanged">
+                    </ComboBox>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top">
+                    <TextBlock Margin="10, 8, 0, 0" x:Name="tbFrameFormats">
+                        Formats :
+                    </TextBlock>
+                    <ComboBox x:Name="cmbFrameFormats" Width="280" Margin="10, 4, 0, 0" ItemsSource="{x:Bind MediaFormats, Mode=OneWay}" 
+                          DisplayMemberPath="DisplayString" SelectionChanged="cmbFrameFormats_SelectionChanged">
+                    </ComboBox>
+                </StackPanel>
+            </StackPanel>
+
+            <!--<ComboBox ItemsSource="{x:Bind ViewModel.MediaFormats}"
+                      SelectedItem="{x:Bind ViewModel.SelectedFormat, Mode=TwoWay}"
+                      DisplayMemberPath="FormattedString"/>--> 
+
+            <Button x:Name="btn_PreviewVideo" Background="MidnightBlue" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10, 8, 0, 0" Width="36" Height="32"
+                    Click="btn_PreviewVideo_Click"  HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+                <ToolTipService.ToolTip>
+                    <ToolTip x:Name="ttip_PreViewVideo" Content="Start/Stop previewing video&#x0a;(can remove effects if stopped while recording...)" Placement="Bottom" Background="LightYellow" Foreground="Black"/>
+                </ToolTipService.ToolTip>
+                <Viewbox Stretch="Uniform" StretchDirection="Both" Margin="-10, -12, -10, -10">
+                    <FontIcon x:Name="fi_PreviewVideo" FontFamily="Segoe UI Emoji" FontSize="20" 
+                                                           Glyph="&#x1F39E;"                             
+                                  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+                </Viewbox>
+            </Button>
+
+            <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top">
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top">
+                    <Button x:Name="btn_RecordVideo" Background="MidnightBlue" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5, 8, 0, 0" Width="36" Height="32"
+                            Click="btn_RecordVideo_Click"  HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+                        <ToolTipService.ToolTip>
+                            <ToolTip x:Name="ttip_RecordVideo" Content="Start recording video" Placement="Bottom" Background="LightYellow" Foreground="Black"/>
+                        </ToolTipService.ToolTip>
+                        <Viewbox Stretch="Uniform" StretchDirection="Both" Margin="-10, -12, -10, -10">
+                            <!--Glyph="&#x1F4F9;"-->
+                            <FontIcon x:Name="fi_RecordVideo" FontFamily="Segoe UI Emoji" FontSize="20" 
+                                                   Glyph="&#x1F3A5;"                             
+                          HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+                        </Viewbox>
+                    </Button>
+                    <Button x:Name="btnBrowseVideo"  Background="MidnightBlue" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5, 8, 0, 0" Width="36" Height="32"
+                            Click="btnBrowseVideo_Click"  HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+                        <ToolTipService.ToolTip>
+                            <ToolTip Content="Browse to select video output file" Placement="Bottom" Background="LightYellow" Foreground="Black"/>
+                        </ToolTipService.ToolTip>
+                        <Viewbox Stretch="Uniform" StretchDirection="Both" Margin="-10, -12, -10, -10">
+                            <FontIcon FontFamily="Segoe UI Emoji" FontSize="20" Glyph="&#x1F4C1;" 
+                                  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+                        </Viewbox>
+                    </Button>
+                    <TextBox x:Name="tbFileVideo" Width="400" Height="34" Margin="0, 8, 0, 0"></TextBox>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top">
+                    <Button x:Name="btn_SaveImage" Background="MidnightBlue" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5, 8, 0, 0" Width="36" Height="32"
+                            Click="btn_SaveImage_Click"  HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+                        <ToolTipService.ToolTip>
+                            <ToolTip x:Name="ttip_SaveImage" Content="Capture the current frame&#x0a;(no effect if no previewing/recording)" Placement="Bottom" Background="LightYellow" Foreground="Black"/>
+                        </ToolTipService.ToolTip>
+                        <Viewbox Stretch="Uniform" StretchDirection="Both" Margin="-10, -12, -10, -10">
+                            <!--Glyph="&#x1F4F9;"-->
+                            <FontIcon x:Name="fi_SaveImage" FontFamily="Segoe UI Emoji" FontSize="20" 
+                                                           Glyph="&#x1F4F7;"                             
+                                  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+                        </Viewbox>
+                    </Button>
+                    <Button x:Name="btnBrowseImage" Background="MidnightBlue" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5, 8, 0, 0" Width="36" Height="32"
+                            Click="btnBrowseImage_Click"  HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+                        <ToolTipService.ToolTip>
+                            <ToolTip Content="Browse to select image output file" Placement="Bottom" Background="LightYellow" Foreground="Black"/>
+                        </ToolTipService.ToolTip>
+                        <Viewbox Stretch="Uniform" StretchDirection="Both" Margin="-10, -12, -10, -10">
+                            <FontIcon FontFamily="Segoe UI Emoji" FontSize="20" Glyph="&#x1F4C1;" 
+                                  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+                        </Viewbox>
+                    </Button>
+                    <TextBox x:Name="tbFileImage" Width="400" Height="34" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0, 8, 0, 0"></TextBox>
+                    <Image x:Name="imgPhoto" Width="80" Height="80" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5, 0, 0, 0" 
+                           Stretch="Uniform">                        
+                    </Image>
+                </StackPanel>
+
+            </StackPanel>
+        </StackPanel>
+
+        <StackPanel x:Name="sp_Effects" Grid.Column="0" Grid.Row="1" Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top">
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top">
+                <TextBlock Margin="10, 10, 0, 0">Mirror</TextBlock>
+                <ToggleSwitch x:Name="tsMirror" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10, 0, 0, 0"
+                          OffContent="No" OnContent="Yes" Toggled="tsMirror_Toggled">
+                    <ToolTipService.ToolTip>
+                        <ToolTip Content="Mirror" Placement="Bottom" Background="LightYellow" Foreground="Black"/>
+                    </ToolTipService.ToolTip>
+                </ToggleSwitch>
+                <ToggleSwitch x:Name="tsHorizontal" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10, 0, 0, 0"
+                              OffContent="Vertical" OnContent="Horizontal" Toggled="tsHorizontal_Toggled" IsOn="True"
+                          Visibility="{Binding IsOn, ElementName=tsMirror}">
+                </ToggleSwitch>
+
+                <TextBlock Margin="10, 12, 0, 0">
+                        Rotation
+                </TextBlock>
+                <ToggleSwitch x:Name="tsRotation" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10, 0, 0, 0"
+                OffContent="No" OnContent="Yes" Toggled="tsRotation_Toggled">
+                    <ToolTipService.ToolTip>
+                        <ToolTip Content="Rotation" Placement="Bottom" Background="LightYellow" Foreground="Black"/>
+                    </ToolTipService.ToolTip>
+                </ToggleSwitch>
+                <ComboBox x:Name="cmbRotation" Width="230" Margin ="10, 0, 0, 0" Height="40" MaxDropDownHeight="400"
+                               SelectedIndex="0" SelectionChanged="cmbRotation_SelectionChanged"
+                       Visibility="{Binding IsOn, ElementName=tsRotation}">
+                    <ComboBoxItem Content="90 Degrees"/>
+                    <ComboBoxItem Content="180 Degrees"/>
+                    <ComboBoxItem Content="270 Degrees"/>
+                </ComboBox>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top">
+
+                <CheckBox x:Name="cbBrightness" VerticalContentAlignment="Center" Padding="10, 5"
+                          Content="Brightness" HorizontalAlignment="Left"  VerticalAlignment="Top" Margin="10, 0, 0, 0" >
+                </CheckBox>
+                <!--<Slider x:Name="sliderBrightness" Margin="0, 0, 0, 0" Orientation="Horizontal" Width="200"
+                        VerticalAlignment="Top" HorizontalAlignment="Center"
+                        TickFrequency="0.01" TickPlacement="None"
+                        Minimum="0" Maximum="5" Value="1"
+                        StepFrequency="0.01" SnapsTo="StepValues" ValueChanged="sliderBrightness_ValueChanged"
+                        Visibility="{Binding IsChecked, ElementName=cbBrightness}">
+                </Slider>-->
+
+                <StackPanel x:Name="spEffectBrightness" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="{Binding IsChecked, ElementName=cbBrightness}">
+                    <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" Margin ="0, 0, 0, 0">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                            <Rectangle Margin="10, -4, 10, 0" Fill="White" Width="20" Height="20" Stroke="Gray" StrokeThickness="1" RadiusX="0" RadiusY="0" />
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                                <TextBlock Margin="10, 3, 0, 0">
+                            Point X :
+                                </TextBlock>
+                                <Slider x:Name="sliderBrightnessWhitePointX" Height="32" Width="200" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10, -4, 10, 0"
+                                        TickFrequency="0.01" TickPlacement="Inline" Maximum="1" Minimum="0" StepFrequency="0.01"
+                                        Value="{x:Bind GetBrightnessWhitePointX(BrightnessWhitePointX), BindBack=SetBrightnessWhitePointX, Mode=TwoWay}">
+                                </Slider>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                                <TextBlock Margin="10, 3, 0, 0">
+                             Point Y :
+                                </TextBlock>
+                                <Slider x:Name="sliderBrightnessWhitePointY" Height="32" Width="200" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10, -4, 10, 0"
+                                        TickFrequency="0.01" TickPlacement="Inline" Maximum="1" Minimum="0" StepFrequency="0.01"
+                                        Value="{x:Bind GetBrightnessWhitePointY(BrightnessWhitePointY), BindBack=SetBrightnessWhitePointY, Mode=TwoWay}">
+                                </Slider>
+                            </StackPanel>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0, -4, 0, 0" >
+                            <Rectangle Margin="10, -4, 10, 0" Fill="Black" Width="20" Height="20" Stroke="Gray" StrokeThickness="1" RadiusX="0" RadiusY="0" />
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                                <TextBlock Margin="10, 3, 0, 0">
+                                Point X :
+                                </TextBlock>
+                                <Slider x:Name="sliderBrightnessBlackPointX" Height="32" Width="200" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10, -4, 10, 0"
+                                        TickFrequency="0.01" TickPlacement="Inline" Maximum="1" Minimum="0" StepFrequency="0.01"
+                                        Value="{x:Bind GetBrightnessBlackPointX(BrightnessBlackPointX), BindBack=SetBrightnessBlackPointX, Mode=TwoWay}">
+                                </Slider>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                                <TextBlock Margin="10, 3, 0, 0">
+                                Point Y :
+                                </TextBlock>
+                                <Slider x:Name="sliderBrightnessBlackPointY" Height="32" Width="200" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10, -4, 10, 0"
+                                        TickFrequency="0.01" TickPlacement="Inline" Maximum="1" Minimum="0" StepFrequency="0.01"
+                                        Value="{x:Bind GetBrightnessBlackPointY(BrightnessBlackPointY), BindBack=SetBrightnessBlackPointY, Mode=TwoWay}">
+                                </Slider>
+                            </StackPanel>
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+
+                <CheckBox x:Name="cbOverlayImage" VerticalContentAlignment="Center" Padding="10, 5"
+                          Content="OverlayImage" HorizontalAlignment="Left"  VerticalAlignment="Top" Margin="5, 0, 0, 0" >
+                </CheckBox>
+                <Image x:Name="imgOverlay" Width="42" Height="42" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0, -5, 0, 0"
+                       Tapped="ImgOverlay_Tapped"
+                       Visibility="{Binding IsChecked, ElementName=cbOverlayImage}">                    
+                </Image>
+
+                <!--Visibility="Collapsed"-->
+                <CheckBox x:Name="cbFaceDetection" VerticalContentAlignment="Center" Padding="10, 5"
+                          Content="Face Detection" HorizontalAlignment="Left"  VerticalAlignment="Top" Margin="5, 0, 0, 0" Checked="cbFaceDetection_Checked">
+                </CheckBox>
+
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top">
+
+                <CheckBox x:Name="cbInvert" VerticalContentAlignment="Center" Padding="10, 5"
+                          Content="Invert" HorizontalAlignment="Left"  VerticalAlignment="Top" Margin="10, 0, 0, 0" >
+                </CheckBox>
+
+                <CheckBox x:Name="cbGrayscale" VerticalContentAlignment="Center" Padding="10, 5"
+                          Content="Gray scale" HorizontalAlignment="Left"  VerticalAlignment="Top" Margin="0, 0, 0, 0" Checked="cbGrayscale_Checked" >
+                </CheckBox>
+                
+                <CheckBox x:Name="cbRGB" VerticalContentAlignment="Center" Padding="10, 5" MinWidth="30"
+                          Content="RGB" HorizontalAlignment="Left"  VerticalAlignment="Top" Margin="5, 0, 0, 0" Checked="cbRGB_Checked">
+                </CheckBox>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="{Binding IsChecked, ElementName=cbRGB}">
+                    <StackPanel Orientation="Horizontal" >
+                        <TextBlock HorizontalAlignment="Left"  Margin="0, 6, 0, 0">
+                            R
+                        </TextBlock>
+                        <Slider x:Name="sliderR"  Margin="0, 0, 0, 0" Orientation="Horizontal" Width="140"
+                                VerticalAlignment="Top" HorizontalAlignment="Center"
+                                TickFrequency="1" TickPlacement="None"
+                                Minimum="0" Maximum="255" Value="0"
+                                StepFrequency="1" SnapsTo="StepValues" ValueChanged="sliderR_ValueChanged" >
+                        </Slider>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock HorizontalAlignment="Left"  Margin="10, 6, 0, 0">
+                            G
+                        </TextBlock>
+                        <Slider x:Name="sliderG"  Margin="0, 0, 0, 0" Orientation="Horizontal" Width="140"
+                                VerticalAlignment="Top" HorizontalAlignment="Center"
+                                TickFrequency="1" TickPlacement="None"
+                                Minimum="0" Maximum="255" Value="0"
+                                StepFrequency="1" SnapsTo="StepValues" ValueChanged="sliderG_ValueChanged" >
+                        </Slider>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock HorizontalAlignment="Left"  Margin="10, 6, 0, 0">
+                            B
+                        </TextBlock>
+                        <Slider x:Name="sliderB"  Margin="0, 0, 0, 0" Orientation="Horizontal" Width="140"
+                                VerticalAlignment="Top" HorizontalAlignment="Center"
+                                TickFrequency="1" TickPlacement="None"
+                                Minimum="0" Maximum="255" Value="0"
+                                StepFrequency="1" SnapsTo="StepValues" ValueChanged="sliderB_ValueChanged" >
+                        </Slider>
+                    </StackPanel>
+                </StackPanel>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top">
+
+                <CheckBox x:Name="cbEmboss" VerticalContentAlignment="Center" Padding="10, 5"
+                          Content="Emboss" HorizontalAlignment="Left"  VerticalAlignment="Top" Margin="10, 0, 0, 0" Checked="cbEmboss_Checked" >
+                </CheckBox>
+                <Slider x:Name="sliderStrengthEmboss" Height="32" Width="120" Orientation="Horizontal" HorizontalAlignment="Left" Margin="10, 0, 10, 0"
+                        TickFrequency="0.1" TickPlacement="Inline" Maximum="10" Minimum="0" StepFrequency="0.1" Value="5.0"
+                        ValueChanged="sliderStrengthEmboss_ValueChanged" Visibility="{Binding IsChecked, ElementName=cbEmboss}" >
+                </Slider>
+
+                <CheckBox x:Name="cbEdgeDetection" VerticalContentAlignment="Center" Padding="10, 5"
+                          Content="Edge Detection" HorizontalAlignment="Left"  VerticalAlignment="Top" Margin="10, 0, 0, 0" Checked="cbEdgeDetection_Checked" >
+                </CheckBox>
+                <Slider x:Name="sliderStrengthEdgeDetection" Height="32" Width="120" Orientation="Horizontal" HorizontalAlignment="Left" Margin="10, 0, 10, 0"
+                        TickFrequency="0.1" TickPlacement="Inline" Maximum="1" Minimum="0" StepFrequency="0.1" Value="0.5"
+                        ValueChanged="sliderStrengthEdgeDetection_ValueChanged" Visibility="{Binding IsChecked, ElementName=cbEdgeDetection}" >
+                </Slider>
+
+                <CheckBox x:Name="cbGaussianBlur" VerticalContentAlignment="Center" Padding="10, 5"
+                         Content="Gaussian Blur" HorizontalAlignment="Left"  VerticalAlignment="Top" Margin="10, 0, 0, 0" Checked="cbGaussianBlur_Checked" >
+                </CheckBox>
+                <Slider x:Name="sliderStandardDeviationGaussianBlur" Height="32" Width="120" Orientation="Horizontal" HorizontalAlignment="Left" Margin="10, 0, 10, 0"
+                        TickFrequency="1.0" TickPlacement="Inline" Maximum="50" Minimum="0" StepFrequency="1.0" Value="3.0"
+                        ValueChanged="sliderStandardDeviationGaussianBlur_ValueChanged" Visibility="{Binding IsChecked, ElementName=cbGaussianBlur}" >
+                </Slider>
+
+                <CheckBox x:Name="cbSharpen" VerticalContentAlignment="Center" Padding="10, 5"
+                          Content="Sharpen" HorizontalAlignment="Left"  VerticalAlignment="Top" Margin="10, 0, 0, 0" Checked="cbSharpen_Checked" >
+                </CheckBox>
+                <Slider x:Name="sliderSharpnessSharpen" Height="32" Width="120" Orientation="Horizontal" HorizontalAlignment="Left" Margin="10, 0, 10, 0"
+                        TickFrequency="0.1" TickPlacement="Inline" Maximum="10" Minimum="0" StepFrequency="0.1" Value="5.0"
+                        ValueChanged="sliderSharpnessSharpen_ValueChanged" Visibility="{Binding IsChecked, ElementName=cbSharpen}" >
+                </Slider>
+
+                <CheckBox x:Name="cbVignette" VerticalContentAlignment="Center" Padding="10, 5"
+                          Content="Vignette" HorizontalAlignment="Left"  VerticalAlignment="Top" Margin="10, 0, 0, 0" Checked="cbVignette_Checked" >
+                </CheckBox>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="-12, 7, 0, 0" Visibility="{Binding IsChecked, ElementName=cbVignette}" >
+                    <TextBlock Margin="0, 0, 0, 0">
+                            Trans. Size :
+                    </TextBlock>
+                    <Slider x:Name="sliderVignetteTransitionSize" Height="32" Width="100" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="3, -6, 0, 0"
+                        TickFrequency="0.1" TickPlacement="Inline" Maximum="1" Minimum="0" StepFrequency="0.1"
+                        Value="{x:Bind GetVignetteTransitionSize(VignetteTransitionSize), BindBack=SetVignetteTransitionSize, Mode=TwoWay}">
+                    </Slider>
+                    <TextBlock Margin="5, 0, 0, 0">
+                            Strength :
+                    </TextBlock>
+                    <Slider x:Name="sliderVignetteStrength" Height="32" Width="100" Orientation="Horizontal" HorizontalAlignment="Left"  VerticalAlignment="Top" Margin="3, -6, 0, 0"
+                        TickFrequency="0.1" TickPlacement="Inline" Maximum="1" Minimum="0" StepFrequency="0.1" SnapsTo="Ticks"
+                        Value="{x:Bind GetVignetteStrength(VignetteStrength), BindBack=SetVignetteStrength, Mode=TwoWay}">
+                    </Slider> 
+                    <Rectangle x:Name="rectVignetteColor" Margin="10, -3, 10, 0" Fill="White" Width="20" Height="20" Stroke="Gray" StrokeThickness="1" RadiusX="0" RadiusY="0" 
+                          Tapped="rectVignetteColor_Tapped" />
+                </StackPanel>
+
+            </StackPanel>
+            
+        </StackPanel>
+
+        <Border Grid.Row="2" Grid.Column="0" Background="Black"  BorderThickness="2" BorderBrush="Gray" Margin="10, 10, 0, 10">
+             <SwapChainPanel x:Name="scp1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0, 0, 0, 0"
+                            RenderTransformOrigin="0.5 0.5">
+
+                <!--<SwapChainPanel.RenderTransform>
+                    --><!--<ScaleTransform ScaleY="1" ScaleX="1" />--><!--
+                    <ScaleTransform ScaleY="1.25" ScaleX="1.25" />
+                </SwapChainPanel.RenderTransform>-->
+            </SwapChainPanel>           
+        </Border>
+
+    </Grid>
+</Window>

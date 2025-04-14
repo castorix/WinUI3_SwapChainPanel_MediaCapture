@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "WinUI3_SwapChainPanel_MediaCapture (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "WinUI3_SwapChainPanel_MediaCapture (Unpackaged)": {
+      "commandName": "Project",
+      "nativeDebugging": true
+    }
+  }
+}
