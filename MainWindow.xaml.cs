@@ -252,11 +252,11 @@ namespace WinUI3_SwapChainPanel_MediaCapture
                 m_pD2DDeviceContext.Clear(new ColorF(ColorF.Enum.Black, 1.0f));
                 //m_pD2DDeviceContext.Clear(null);               
 
-                D2D1_SIZE_F size = m_pD2DDeviceContext.GetSize();              
+                m_pD2DDeviceContext.GetSize(out D2D1_SIZE_F size);              
 
                 if (m_pD2DBitmap1 != null)
                 {
-                    D2D1_SIZE_F sizeBmpBackground = m_pD2DBitmap1.GetSize();
+                    m_pD2DBitmap1.GetSize(out D2D1_SIZE_F sizeBmpBackground);
                     
                     float renderTargetAspect = size.width / size.height;
                     float bitmapAspect = sizeBmpBackground.width / sizeBmpBackground.height;
@@ -316,7 +316,7 @@ namespace WinUI3_SwapChainPanel_MediaCapture
                                 hr = m_pD2DDeviceContext.CreateBitmapFromDxgiSurface(pDXGISurface, bitmapProperties, out pD2DBitmap1);
                                 if (hr == HRESULT.S_OK && pD2DBitmap1 != null)
                                 {
-                                    sizeBmpBackground = pD2DBitmap1.GetSize();
+                                    pD2DBitmap1.GetSize(out sizeBmpBackground);
 
                                     renderTargetAspect = size.width / size.height;
                                     bitmapAspect = sizeBmpBackground.width / sizeBmpBackground.height;

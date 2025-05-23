@@ -91,7 +91,7 @@ namespace VideoEffectComponent
 
             m_pD2DDeviceContextEffect.SetTarget(renderTarget);
 
-            var size = m_pD2DDeviceContextEffect.GetSize();
+            m_pD2DDeviceContextEffect.GetSize(out D2D1_SIZE_F size);
             float nWidth = size.width;
             float nHeight = size.height;
 

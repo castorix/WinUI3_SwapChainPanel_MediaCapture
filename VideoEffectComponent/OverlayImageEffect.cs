@@ -99,7 +99,7 @@ namespace VideoEffectComponent
             var inputBitmap = CreateBitmapFromSurface(inputSurface, D2D1_BITMAP_OPTIONS.D2D1_BITMAP_OPTIONS_NONE);
             var renderTarget = CreateBitmapFromSurface(outputSurface, D2D1_BITMAP_OPTIONS.D2D1_BITMAP_OPTIONS_TARGET);
 
-            var size = m_pD2DDeviceContextEffect.GetSize();
+            m_pD2DDeviceContextEffect.GetSize(out D2D1_SIZE_F size);
             float nWidth = size.width;
             float nHeight = size.height;
 
@@ -126,7 +126,7 @@ namespace VideoEffectComponent
 
             if (m_pD2D1Bitmap1 != null)
             {
-                D2D1_SIZE_F sizeBitmapOverlay = m_pD2D1Bitmap1.GetSize();
+                m_pD2D1Bitmap1.GetSize(out D2D1_SIZE_F sizeBitmapOverlay);
                 //D2D1_RECT_F destRectOverlay = new D2D1_RECT_F(0.0f, 0.0f, nWidth, nHeight);
                 D2D1_RECT_F destRectOverlay = new D2D1_RECT_F(0.0f, 0.0f, sizeBitmapOverlay.width, sizeBitmapOverlay.height);
                 D2D1_RECT_F sourceRectOverlay = new D2D1_RECT_F(0.0f, 0.0f, sizeBitmapOverlay.width, sizeBitmapOverlay.height);

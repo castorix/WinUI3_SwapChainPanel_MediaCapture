@@ -274,19 +274,33 @@ namespace VideoEffectComponent.DirectXInternal
     [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     internal interface ID2D1Factory
     {
+        [PreserveSig]
         HRESULT ReloadSystemMetrics();
+        [PreserveSig]
         HRESULT GetDesktopDpi(out float dpiX, out float dpiY);
+        [PreserveSig]
         HRESULT CreateRectangleGeometry(ref D2D1_RECT_F rectangle, out IntPtr rectangleGeometry);
+        [PreserveSig]
         HRESULT CreateRoundedRectangleGeometry(ref D2D1_ROUNDED_RECT roundedRectangle, out IntPtr roundedRectangleGeometry);
+        [PreserveSig]
         HRESULT CreateEllipseGeometry(ref D2D1_ELLIPSE ellipse, out IntPtr ellipseGeometry);
+        [PreserveSig]
         HRESULT CreateGeometryGroup(D2D1_FILL_MODE fillMode, IntPtr geometries, uint geometriesCount, out IntPtr geometryGroup);
+        [PreserveSig]
         HRESULT CreateTransformedGeometry(IntPtr sourceGeometry, D2D1_MATRIX_3X2_F transform, out IntPtr transformedGeometry);
+        [PreserveSig]
         HRESULT CreatePathGeometry(out IntPtr pathGeometry);
-        IntPtr CreateStrokeStyle(D2D1_STROKE_STYLE_PROPERTIES strokeStyleProperties, [MarshalAs(UnmanagedType.LPArray)] float[] dashes = null, uint dashesCount = 0);
-        HRESULT CreateDrawingStateBlock(D2D1_DRAWING_STATE_DESCRIPTION drawingStateDescription, IntPtr textRenderingParams, out IntPtr drawingStateBlock);
+        [PreserveSig]
+        IntPtr CreateStrokeStyle(ref D2D1_STROKE_STYLE_PROPERTIES strokeStyleProperties, [MarshalAs(UnmanagedType.LPArray)] float[] dashes = null, uint dashesCount = 0);
+        [PreserveSig]
+        HRESULT CreateDrawingStateBlock(ref D2D1_DRAWING_STATE_DESCRIPTION drawingStateDescription, IntPtr textRenderingParams, out IntPtr drawingStateBlock);
+        [PreserveSig]
         HRESULT CreateWicBitmapRenderTarget(IntPtr target, D2D1_RENDER_TARGET_PROPERTIES renderTargetProperties, out IntPtr renderTarget);
+        [PreserveSig]
         HRESULT CreateHwndRenderTarget(ref D2D1_RENDER_TARGET_PROPERTIES renderTargetProperties, ref D2D1_HWND_RENDER_TARGET_PROPERTIES hwndRenderTargetProperties, out IntPtr hwndRenderTarget);
+        [PreserveSig]
         HRESULT CreateDxgiSurfaceRenderTarget(IntPtr dxgiSurface, ref D2D1_RENDER_TARGET_PROPERTIES renderTargetProperties, ref IntPtr renderTarget);
+        [PreserveSig]
         HRESULT CreateDCRenderTarget(ref D2D1_RENDER_TARGET_PROPERTIES renderTargetProperties, ref IntPtr dcRenderTarget);
     }
 
@@ -727,22 +741,37 @@ namespace VideoEffectComponent.DirectXInternal
     internal interface ID2D1Factory1 : ID2D1Factory
     {
         #region <ID2D1Factory>
+        [PreserveSig]
         new HRESULT ReloadSystemMetrics();
+        [PreserveSig]
         new HRESULT GetDesktopDpi(out float dpiX, out float dpiY);
+        [PreserveSig]
         new HRESULT CreateRectangleGeometry(ref D2D1_RECT_F rectangle, out IntPtr rectangleGeometry);
+        [PreserveSig]
         new HRESULT CreateRoundedRectangleGeometry(ref D2D1_ROUNDED_RECT roundedRectangle, out IntPtr roundedRectangleGeometry);
+        [PreserveSig]
         new HRESULT CreateEllipseGeometry(ref D2D1_ELLIPSE ellipse, out IntPtr ellipseGeometry);
+        [PreserveSig]
         new HRESULT CreateGeometryGroup(D2D1_FILL_MODE fillMode, IntPtr geometries, uint geometriesCount, out IntPtr geometryGroup);
+        [PreserveSig]
         new HRESULT CreateTransformedGeometry(IntPtr sourceGeometry, D2D1_MATRIX_3X2_F transform, out IntPtr transformedGeometry);
+        [PreserveSig]
         new HRESULT CreatePathGeometry(out IntPtr pathGeometry);
-        new IntPtr CreateStrokeStyle(D2D1_STROKE_STYLE_PROPERTIES strokeStyleProperties, [MarshalAs(UnmanagedType.LPArray)] float[] dashes = null, uint dashesCount = 0);
-        new HRESULT CreateDrawingStateBlock(D2D1_DRAWING_STATE_DESCRIPTION drawingStateDescription, IntPtr textRenderingParams, out IntPtr drawingStateBlock);
+        [PreserveSig]
+        new IntPtr CreateStrokeStyle(ref D2D1_STROKE_STYLE_PROPERTIES strokeStyleProperties, [MarshalAs(UnmanagedType.LPArray)] float[] dashes = null, uint dashesCount = 0);
+        [PreserveSig]
+        new HRESULT CreateDrawingStateBlock(ref D2D1_DRAWING_STATE_DESCRIPTION drawingStateDescription, IntPtr textRenderingParams, out IntPtr drawingStateBlock);
+        [PreserveSig]
         new HRESULT CreateWicBitmapRenderTarget(IntPtr target, D2D1_RENDER_TARGET_PROPERTIES renderTargetProperties, out IntPtr renderTarget);
+        [PreserveSig]
         new HRESULT CreateHwndRenderTarget(ref D2D1_RENDER_TARGET_PROPERTIES renderTargetProperties, ref D2D1_HWND_RENDER_TARGET_PROPERTIES hwndRenderTargetProperties, out IntPtr hwndRenderTarget);
+        [PreserveSig]
         new HRESULT CreateDxgiSurfaceRenderTarget(IntPtr dxgiSurface, ref D2D1_RENDER_TARGET_PROPERTIES renderTargetProperties, ref IntPtr renderTarget);
+        [PreserveSig]
         new HRESULT CreateDCRenderTarget(ref D2D1_RENDER_TARGET_PROPERTIES renderTargetProperties, ref IntPtr dcRenderTarget);
         #endregion
 
+        [PreserveSig]
         HRESULT CreateDevice(IDXGIDevice dxgiDevice, out ID2D1Device d2dDevice);
         //    HRESULT CreateStrokeStyle(D2D1_STROKE_STYLE_PROPERTIES1 strokeStyleProperties, float dashes, uint dashesCount, out IntPtr strokeStyle);
         //    HRESULT CreatePathGeometry(out ID2D1PathGeometry1 pathGeometry);
@@ -755,6 +784,7 @@ namespace VideoEffectComponent.DirectXInternal
     [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     internal interface ID2D1Resource
     {
+        [PreserveSig]
         void GetFactory(out ID2D1Factory factory);
     }
 
@@ -830,14 +860,20 @@ namespace VideoEffectComponent.DirectXInternal
     internal interface ID2D1Device : ID2D1Resource
     {
         #region <ID2D1Resource>
+        [PreserveSig]
         new void GetFactory(out ID2D1Factory factory);
         #endregion
 
+        [PreserveSig]
         HRESULT CreateDeviceContext(D2D1_DEVICE_CONTEXT_OPTIONS options, out ID2D1DeviceContext deviceContext);
         //HRESULT CreatePrintControl(IWICImagingFactory wicFactory, IPrintDocumentPackageTarget documentTarget, D2D1_PRINT_CONTROL_PROPERTIES printControlProperties, out ID2D1PrintControl printControl);
+        [PreserveSig]
         HRESULT CreatePrintControl(IntPtr wicFactory, IntPtr documentTarget, ref D2D1_PRINT_CONTROL_PROPERTIES printControlProperties, out IntPtr printControl);
+        [PreserveSig]
         void SetMaximumTextureMemory(UInt64 maximumInBytes);
+        [PreserveSig]
         UInt64 GetMaximumTextureMemory();
+        [PreserveSig]
         void ClearResources(uint millisecondsSinceUse = 0);
     }
 
@@ -848,6 +884,7 @@ namespace VideoEffectComponent.DirectXInternal
     {
         #region <ID2D1Resource>
 
+        [PreserveSig]
         new void GetFactory(out ID2D1Factory factory);
 
         #endregion
@@ -877,15 +914,17 @@ namespace VideoEffectComponent.DirectXInternal
         void Function24();
         void Function25();
         void Function26();
+        [PreserveSig]
         void SetTransform(D2D1_MATRIX_3X2_F transform);
+        [PreserveSig]
         void GetTransform(out D2D1_MATRIX_3X2_F_STRUCT transform);
         [PreserveSig]
         void SetAntialiasMode(D2D1_ANTIALIAS_MODE antialiasMode);
         [PreserveSig]
-        D2D1_ANTIALIAS_MODE GetAntialiasMode();
+        void GetAntialiasMode(out D2D1_ANTIALIAS_MODE antialiasMode);        
         void Function31();
         [PreserveSig]
-        D2D1_TEXT_ANTIALIAS_MODE GetTextAntialiasMode();
+        void GetTextAntialiasMode(out D2D1_TEXT_ANTIALIAS_MODE textAntialiasMode);
         void Function33();
         void Function34();
         void Function35();
@@ -897,16 +936,22 @@ namespace VideoEffectComponent.DirectXInternal
         void Function41();
         void Function42();
         void Function43();
+        [PreserveSig]
         void Clear(D2D1_COLOR_F clearColor);
         [PreserveSig]
         void BeginDraw();
         [PreserveSig]
         HRESULT EndDraw(out UInt64 tag1, out UInt64 tag2);
-        D2D1_PIXEL_FORMAT GetPixelFormat();
+        [PreserveSig]
+        void GetPixelFormat(out D2D1_PIXEL_FORMAT pixelFormat);
+        [PreserveSig]
         void SetDpi(float dpiX, float dpiY);
+        [PreserveSig]
         void GetDpi(out float dpiX, out float dpiY);
-        D2D1_SIZE_F GetSize();
-        D2D1_SIZE_U GetPixelSize();
+        [PreserveSig]
+        void GetSize(out D2D1_SIZE_F size);
+        [PreserveSig]
+        void GetPixelSize(out D2D1_SIZE_U size);
         [PreserveSig]
         uint GetMaximumBitmapSize();
         [PreserveSig]
@@ -921,6 +966,7 @@ namespace VideoEffectComponent.DirectXInternal
         #region <ID2D1RenderTarget>
 
         #region <ID2D1Resource>
+        [PreserveSig]
         new void GetFactory(out ID2D1Factory factory);
         #endregion
 
@@ -950,15 +996,17 @@ namespace VideoEffectComponent.DirectXInternal
         new void Function24();
         new void Function25();
         new void Function26();
+        [PreserveSig]
         new void SetTransform(D2D1_MATRIX_3X2_F transform);
+        [PreserveSig]
         new void GetTransform(out D2D1_MATRIX_3X2_F_STRUCT transform);
         [PreserveSig]
         new void SetAntialiasMode(D2D1_ANTIALIAS_MODE antialiasMode);
         [PreserveSig]
-        new D2D1_ANTIALIAS_MODE GetAntialiasMode();
+        new void GetAntialiasMode(out D2D1_ANTIALIAS_MODE antialiasMode);
         new void Function31();
         [PreserveSig]
-        new D2D1_TEXT_ANTIALIAS_MODE GetTextAntialiasMode();
+        new void GetTextAntialiasMode(out D2D1_TEXT_ANTIALIAS_MODE textAntialiasMode);
         new void Function33();
         new void Function34();
         new void Function35();
@@ -970,16 +1018,22 @@ namespace VideoEffectComponent.DirectXInternal
         new void Function41();
         new void Function42();
         new void Function43();
+        [PreserveSig]
         new void Clear(D2D1_COLOR_F clearColor);
         [PreserveSig]
         new void BeginDraw();
         [PreserveSig]
         new HRESULT EndDraw(out UInt64 tag1, out UInt64 tag2);
-        new D2D1_PIXEL_FORMAT GetPixelFormat();
+        [PreserveSig]
+        new void GetPixelFormat(out D2D1_PIXEL_FORMAT pixelFormat);
+        [PreserveSig]
         new void SetDpi(float dpiX, float dpiY);
+        [PreserveSig]
         new void GetDpi(out float dpiX, out float dpiY);
-        new D2D1_SIZE_F GetSize();
-        new D2D1_SIZE_U GetPixelSize();
+        [PreserveSig]
+        new void GetSize(out D2D1_SIZE_F size);
+        [PreserveSig]
+        new void GetPixelSize(out D2D1_SIZE_U size);
         [PreserveSig]
         new uint GetMaximumBitmapSize();
         [PreserveSig]
@@ -987,38 +1041,58 @@ namespace VideoEffectComponent.DirectXInternal
 
         #endregion
 
+        [PreserveSig]
         HRESULT CreateBitmap(D2D1_SIZE_U size, IntPtr sourceData, uint pitch, ref D2D1_BITMAP_PROPERTIES1 bitmapProperties, out ID2D1Bitmap1 bitmap);
+        [PreserveSig]
         HRESULT CreateBitmapFromWicBitmap(IntPtr wicBitmapSource, ref D2D1_BITMAP_PROPERTIES1 bitmapProperties, out ID2D1Bitmap1 bitmap);
+        [PreserveSig]
         HRESULT CreateColorContext(D2D1_COLOR_SPACE space, IntPtr profile, uint profileSize, out IntPtr colorContext);
+        [PreserveSig]
         HRESULT CreateColorContextFromFilename(string filename, out IntPtr colorContext);
+        [PreserveSig]
         HRESULT CreateColorContextFromWicColorContext(IntPtr wicColorContext, out IntPtr colorContext);
+        [PreserveSig]
         HRESULT CreateBitmapFromDxgiSurface(IDXGISurface surface, ref D2D1_BITMAP_PROPERTIES1 bitmapProperties, out ID2D1Bitmap1 bitmap);
+        [PreserveSig]
         HRESULT CreateEffect(ref Guid effectId, out ID2D1Effect effect);
+        [PreserveSig]
         HRESULT CreateGradientStopCollection([MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] D2D1_GRADIENT_STOP[] straightAlphaGradientStops, uint straightAlphaGradientStopsCount, D2D1_COLOR_SPACE preInterpolationSpace,
             D2D1_COLOR_SPACE postInterpolationSpace, D2D1_BUFFER_PRECISION bufferPrecision, D2D1_EXTEND_MODE extendMode, D2D1_COLOR_INTERPOLATION_MODE colorInterpolationMode,
             out IntPtr gradientStopCollection1);
+        [PreserveSig]
         HRESULT CreateImageBrush(ID2D1Image image, ref D2D1_IMAGE_BRUSH_PROPERTIES imageBrushProperties, ref D2D1_BRUSH_PROPERTIES brushProperties, out IntPtr imageBrush);
+        [PreserveSig]
         HRESULT CreateBitmapBrush(ID2D1Bitmap bitmap, ref D2D1_BITMAP_BRUSH_PROPERTIES1 bitmapBrushProperties, ref D2D1_BRUSH_PROPERTIES brushProperties, out IntPtr bitmapBrush);
+        [PreserveSig]
         HRESULT CreateCommandList(out IntPtr commandList);
         [PreserveSig]
         bool IsDxgiFormatSupported(DXGI_FORMAT format);
         [PreserveSig]
         bool IsBufferPrecisionSupported(D2D1_BUFFER_PRECISION bufferPrecision);
+        [PreserveSig]
         HRESULT GetImageLocalBounds(ID2D1Image image, out D2D1_RECT_F localBounds);
+        [PreserveSig]
         HRESULT GetImageWorldBounds(ID2D1Image image, out D2D1_RECT_F worldBounds);
+        [PreserveSig]
         HRESULT GetGlyphRunWorldBounds(ref D2D1_POINT_2F baselineOrigin, DWRITE_GLYPH_RUN glyphRun, DWRITE_MEASURING_MODE measuringMode, out D2D1_RECT_F bounds);
+        [PreserveSig]
         void GetDevice(out ID2D1Device device);
         [PreserveSig]
         void SetTarget(ID2D1Image image);
+        [PreserveSig]
         void GetTarget(out ID2D1Image image);
+        [PreserveSig]
         void SetRenderingControls(D2D1_RENDERING_CONTROLS renderingControls);
+        [PreserveSig]
         void GetRenderingControls(out D2D1_RENDERING_CONTROLS renderingControls);
+        [PreserveSig]
         void SetPrimitiveBlend(D2D1_PRIMITIVE_BLEND primitiveBlend);
         [PreserveSig]
-        D2D1_PRIMITIVE_BLEND GetPrimitiveBlend();
+        void GetPrimitiveBlend(out D2D1_PRIMITIVE_BLEND primitiveBlend);
+        [PreserveSig]
         void SetUnitMode(D2D1_UNIT_MODE unitMode);
         [PreserveSig]
-        D2D1_UNIT_MODE GetUnitMode();
+        void GetUnitMode(out D2D1_UNIT_MODE unitMode);
         [PreserveSig]
         void DrawGlyphRun(D2D1_POINT_2F baselineOrigin, ref DWRITE_GLYPH_RUN glyphRun, IntPtr glyphRunDescription, IntPtr foregroundBrush, DWRITE_MEASURING_MODE measuringMode);
         [PreserveSig]
@@ -1027,14 +1101,20 @@ namespace VideoEffectComponent.DirectXInternal
         void DrawGdiMetafile(IntPtr gdiMetafile, ref D2D1_POINT_2F targetOffset);
         [PreserveSig]
         void DrawBitmap(ID2D1Bitmap bitmap, ref D2D1_RECT_F destinationRectangle, float opacity, D2D1_INTERPOLATION_MODE interpolationMode, ref D2D1_RECT_F sourceRectangle, D2D1_MATRIX_4X4_F perspectiveTransform = null);
+        [PreserveSig]
         void PushLayer(ref D2D1_LAYER_PARAMETERS1 layerParameters, IntPtr layer);
+        [PreserveSig]
         HRESULT InvalidateEffectInputRectangle(ID2D1Effect effect, uint input, D2D1_RECT_F inputRectangle);
+        [PreserveSig]
         HRESULT GetEffectInvalidRectangleCount(ID2D1Effect effect, out uint rectangleCount);
         //HRESULT GetEffectInvalidRectangles(ID2D1Effect effect, out D2D1_RECT_F* rectangles, uint rectanglesCount);
+        [PreserveSig]
         HRESULT GetEffectInvalidRectangles(ID2D1Effect effect, out IntPtr rectangles, uint rectanglesCount);
+        [PreserveSig]
         HRESULT GetEffectRequiredInputRectangles(ID2D1Effect renderEffect, D2D1_RECT_F renderImageRectangle, D2D1_EFFECT_INPUT_DESCRIPTION inputDescriptions,
             //out D2D1_RECT_F* requiredInputRects, uint inputCount);
             out IntPtr requiredInputRects, uint inputCount);
+        [PreserveSig]
         void FillOpacityMask(ID2D1Bitmap opacityMask, IntPtr brush, ref D2D1_RECT_F destinationRectangle, D2D1_RECT_F sourceRectangle);
     }
 
@@ -1045,6 +1125,7 @@ namespace VideoEffectComponent.DirectXInternal
     {
         [PreserveSig]
         uint GetPropertyCount();
+        [PreserveSig]
         HRESULT GetPropertyName(uint index, out string name, uint nameCount);
         [PreserveSig]
         uint GetPropertyNameLength(uint index);
@@ -1052,12 +1133,17 @@ namespace VideoEffectComponent.DirectXInternal
         D2D1_PROPERTY_TYPE GetType(uint index);
         [PreserveSig]
         uint GetPropertyIndex(string name);
+        [PreserveSig]
         HRESULT SetValueByName(string name, D2D1_PROPERTY_TYPE type, IntPtr data, uint dataSize);
+        [PreserveSig]
         HRESULT SetValue(uint index, D2D1_PROPERTY_TYPE type, IntPtr data, uint dataSize);
+        [PreserveSig]
         HRESULT GetValueByName(string name, D2D1_PROPERTY_TYPE type, out IntPtr data, uint dataSize);
+        [PreserveSig]
         HRESULT GetValue(uint index, D2D1_PROPERTY_TYPE type, out IntPtr data, uint dataSize);
         [PreserveSig]
         uint GetValueSize(uint index);
+        [PreserveSig]
         HRESULT GetSubProperties(uint index, out ID2D1Properties subProperties);
     }
 
@@ -1093,6 +1179,7 @@ namespace VideoEffectComponent.DirectXInternal
         #region <ID2D1Properties>
         [PreserveSig]
         new uint GetPropertyCount();
+        [PreserveSig]
         new HRESULT GetPropertyName(uint index, out string name, uint nameCount);
         [PreserveSig]
         new uint GetPropertyNameLength(uint index);
@@ -1100,20 +1187,29 @@ namespace VideoEffectComponent.DirectXInternal
         new D2D1_PROPERTY_TYPE GetType(uint index);
         [PreserveSig]
         new uint GetPropertyIndex(string name);
+        [PreserveSig]
         new HRESULT SetValueByName(string name, D2D1_PROPERTY_TYPE type, IntPtr data, uint dataSize);
+        [PreserveSig]
         new HRESULT SetValue(uint index, D2D1_PROPERTY_TYPE type, IntPtr data, uint dataSize);
+        [PreserveSig]
         new HRESULT GetValueByName(string name, D2D1_PROPERTY_TYPE type, out IntPtr data, uint dataSize);
+        [PreserveSig]
         new HRESULT GetValue(uint index, D2D1_PROPERTY_TYPE type, out IntPtr data, uint dataSize);
         [PreserveSig]
         new uint GetValueSize(uint index);
+        [PreserveSig]
         new HRESULT GetSubProperties(uint index, out ID2D1Properties subProperties);
         #endregion
 
+        [PreserveSig]
         void SetInput(uint index, ID2D1Image input, bool invalidate = true);
+        [PreserveSig]
         HRESULT SetInputCount(uint inputCount);
+        [PreserveSig]
         void GetInput(uint index, out ID2D1Image input);
         [PreserveSig]
         uint GetInputCount();
+        [PreserveSig]
         void GetOutput(out ID2D1Image outputImage);
     }
 
@@ -1435,6 +1531,7 @@ namespace VideoEffectComponent.DirectXInternal
     internal interface ID2D1Image : ID2D1Resource
     {
         #region <ID2D1Resource>
+        [PreserveSig]
         new void GetFactory(out ID2D1Factory factory);
         #endregion
     }
@@ -1446,16 +1543,24 @@ namespace VideoEffectComponent.DirectXInternal
     {
         #region <ID2D1Image>
         #region <ID2D1Resource>
+        [PreserveSig]
         new void GetFactory(out ID2D1Factory factory);
         #endregion
         #endregion
 
-        D2D1_SIZE_F GetSize();
-        D2D1_SIZE_U GetPixelSize();
-        D2D1_PIXEL_FORMAT GetPixelFormat();
+        [PreserveSig]
+        void GetSize(out D2D1_SIZE_F size);
+        [PreserveSig]
+        void GetPixelSize(out D2D1_SIZE_U size);
+        [PreserveSig]
+        void GetPixelFormat(out D2D1_PIXEL_FORMAT format);
+        [PreserveSig]
         void GetDpi(out float dpiX, out float dpiY);
+        [PreserveSig]
         void CopyFromBitmap(ref D2D1_POINT_2U destPoint, ID2D1Bitmap bitmap, D2D1_RECT_U srcRect);
+        [PreserveSig]
         void CopyFromRenderTarget(ref D2D1_POINT_2U destPoint, ID2D1RenderTarget renderTarget, D2D1_RECT_U srcRect);
+        [PreserveSig]
         void CopyFromMemory(ref D2D1_RECT_U dstRect, IntPtr srcData, uint pitch);
     }
 
@@ -1470,19 +1575,31 @@ namespace VideoEffectComponent.DirectXInternal
         new void GetFactory(out ID2D1Factory factory);
         #endregion
         #endregion
-        new D2D1_SIZE_F GetSize();
-        new D2D1_SIZE_U GetPixelSize();
-        new D2D1_PIXEL_FORMAT GetPixelFormat();
+        [PreserveSig]
+        new void GetSize(out D2D1_SIZE_F size);
+        [PreserveSig]
+        new void GetPixelSize(out D2D1_SIZE_U size);
+        [PreserveSig]
+        new void GetPixelFormat(out D2D1_PIXEL_FORMAT format);
+        [PreserveSig]
         new void GetDpi(out float dpiX, out float dpiY);
+        [PreserveSig]
         new void CopyFromBitmap(ref D2D1_POINT_2U destPoint, ID2D1Bitmap bitmap, D2D1_RECT_U srcRect);
+        [PreserveSig]
         new void CopyFromRenderTarget(ref D2D1_POINT_2U destPoint, ID2D1RenderTarget renderTarget, D2D1_RECT_U srcRect);
+        [PreserveSig]
         new void CopyFromMemory(ref D2D1_RECT_U dstRect, IntPtr srcData, uint pitch);
         #endregion
 
+        [PreserveSig]
         void GetColorContext(out IntPtr colorContext);
-        D2D1_BITMAP_OPTIONS GetOptions();
+        [PreserveSig]
+        void GetOptions(out D2D1_BITMAP_OPTIONS options);
+        [PreserveSig]
         HRESULT GetSurface(out IDXGISurface dxgiSurface);
+        [PreserveSig]
         HRESULT Map(D2D1_MAP_OPTIONS options, out D2D1_MAPPED_RECT mappedRect);
+        [PreserveSig]
         HRESULT Unmap();
     }
 
