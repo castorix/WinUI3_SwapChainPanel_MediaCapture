@@ -174,7 +174,7 @@ namespace WinUI3_SwapChainPanel_MediaCapture
         private void ChangeCursor(UIElement control, Microsoft.UI.Input.InputCursor cursor)
         {
             var cursorProperty = typeof(UIElement).GetProperty("ProtectedCursor", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            var currentCursor = cursorProperty?.GetValue(imgOverlay) as InputSystemCursor;
+            var currentCursor = cursorProperty?.GetValue(control) as InputSystemCursor;
             Microsoft.UI.Input.InputCursor ic = cursor;
             var methodInfo = typeof(UIElement).GetMethod("set_ProtectedCursor", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
             if (methodInfo != null)
