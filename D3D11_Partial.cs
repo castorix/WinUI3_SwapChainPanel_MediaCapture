@@ -18,6 +18,10 @@ namespace D3D11
     {
         [DllImport("D3D11.dll", SetLastError = true, CharSet = CharSet.Unicode)]
         public static extern uint D3D11CalcSubresource(uint MipSlice, uint ArraySlice, uint MipLevels);
+
+        [DllImport("d3dcompiler_47.dll", CharSet = CharSet.Ansi)]
+        public static extern HRESULT D3DCompile(byte[] pSrcData, IntPtr srcDataSize, string sourceName, IntPtr pDefines, IntPtr pInclude,
+            string entryPoint, string target, uint flags1, uint flags2, out IntPtr code, out IntPtr errorMsgs);       
     }
 
     [ComImport]
@@ -162,28 +166,46 @@ namespace D3D11
         void GetDesc(out D3D11_SHADER_RESOURCE_VIEW_DESC pDesc);
     }
 
-    //typedef D3D_SRV_DIMENSION D3D11_SRV_DIMENSION;
     [StructLayout(LayoutKind.Sequential)]
+    public struct D3D11_TEX2D_SRV
+    {
+        public uint MostDetailedMip;
+        public uint MipLevels;
+    }
+
+    public enum D3D11_SRV_DIMENSION : int
+    {
+        D3D11_SRV_DIMENSION_UNKNOWN = 0,
+        D3D11_SRV_DIMENSION_BUFFER = 1,
+        D3D11_SRV_DIMENSION_TEXTURE1D = 2,
+        D3D11_SRV_DIMENSION_TEXTURE1DARRAY = 3,
+        D3D11_SRV_DIMENSION_TEXTURE2D = 4,
+        D3D11_SRV_DIMENSION_TEXTURE2DARRAY = 5,
+        D3D11_SRV_DIMENSION_TEXTURE2DMS = 6,
+        D3D11_SRV_DIMENSION_TEXTURE2DMSARRAY = 7,
+        D3D11_SRV_DIMENSION_TEXTURE3D = 8,
+        D3D11_SRV_DIMENSION_TEXTURECUBE = 9,
+        D3D11_SRV_DIMENSION_TEXTURECUBEARRAY = 10,
+        D3D11_SRV_DIMENSION_BUFFEREX = 11
+    }
+
+    [StructLayout(LayoutKind.Explicit)]
     public struct D3D11_SHADER_RESOURCE_VIEW_DESC
     {
+        [FieldOffset(0)]
         public DXGI_FORMAT Format;
-        //public D3D11_SRV_DIMENSION ViewDimension;
-        public D3D_SRV_DIMENSION ViewDimension;
 
-        //    union 
-        //    {
-        //    D3D11_BUFFER_SRV Buffer;
-        //    D3D11_TEX1D_SRV Texture1D;
-        //    D3D11_TEX1D_ARRAY_SRV Texture1DArray;
-        //    D3D11_TEX2D_SRV Texture2D;
-        //    D3D11_TEX2D_ARRAY_SRV Texture2DArray;
-        //    D3D11_TEX2DMS_SRV Texture2DMS;
-        //    D3D11_TEX2DMS_ARRAY_SRV Texture2DMSArray;
-        //    D3D11_TEX3D_SRV Texture3D;
-        //    D3D11_TEXCUBE_SRV TextureCube;
-        //    D3D11_TEXCUBE_ARRAY_SRV TextureCubeArray;
-        //    D3D11_BUFFEREX_SRV BufferEx;
-        //};
+        [FieldOffset(4)]
+        public D3D11_SRV_DIMENSION ViewDimension;
+
+        // Union starts here (offset 8)
+
+        [FieldOffset(8)]
+        public D3D11_TEX2D_SRV Texture2D;
+
+        // (Optional future use)
+        // [FieldOffset(8)]
+        // public D3D11_TEX2D_ARRAY_SRV Texture2DArray;
     }
 
     public enum D3D_SRV_DIMENSION
@@ -336,13 +358,13 @@ namespace D3D11
     [StructLayout(LayoutKind.Sequential)]
     public struct D3D11_SAMPLER_DESC
     {
-        D3D11_FILTER Filter;
-        D3D11_TEXTURE_ADDRESS_MODE AddressU;
-        D3D11_TEXTURE_ADDRESS_MODE AddressV;
-        D3D11_TEXTURE_ADDRESS_MODE AddressW;
+        public D3D11_FILTER Filter;
+        public D3D11_TEXTURE_ADDRESS_MODE AddressU;
+        public D3D11_TEXTURE_ADDRESS_MODE AddressV;
+        public D3D11_TEXTURE_ADDRESS_MODE AddressW;
         public float MipLODBias;
         public uint MaxAnisotropy;
-        D3D11_COMPARISON_FUNC ComparisonFunc;
+        public D3D11_COMPARISON_FUNC ComparisonFunc;
         [MarshalAs(UnmanagedType.R4, SizeConst = 4)]
         public float BorderColor;
         public float MinLOD;
@@ -1014,15 +1036,15 @@ namespace D3D11
         #endregion
 
         [PreserveSig]
-        void VSSetConstantBuffers(uint StartSlot, uint NumBuffers, ID3D11Buffer ppConstantBuffers);
+        void VSSetConstantBuffers(uint StartSlot, uint NumBuffers, [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] ID3D11Buffer[] ppConstantBuffers);
         [PreserveSig]
-        void PSSetShaderResources(uint StartSlot, uint NumViews, ID3D11ShaderResourceView ppShaderResourceViews);
+        void PSSetShaderResources(uint StartSlot, uint NumViews, [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] ID3D11ShaderResourceView[] ppShaderResourceViews);
         [PreserveSig]
-        void PSSetShader(ID3D11PixelShader pPixelShader, ID3D11ClassInstance ppClassInstances, uint NumClassInstances);
+        void PSSetShader(ID3D11PixelShader pPixelShader, [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] ID3D11ClassInstance[] ppClassInstances, uint NumClassInstances);
         [PreserveSig]
-        void PSSetSamplers(uint StartSlot, uint NumSamplers, ID3D11SamplerState ppSamplers);
+        void PSSetSamplers(uint StartSlot, uint NumSamplers, [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] ID3D11SamplerState[] ppSamplers);
         [PreserveSig]
-        void VSSetShader(ID3D11VertexShader pVertexShader, ID3D11ClassInstance ppClassInstances, uint NumClassInstances);
+        void VSSetShader(ID3D11VertexShader pVertexShader, [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] ID3D11ClassInstance[] ppClassInstances, uint NumClassInstances);
         [PreserveSig]
         void DrawIndexed(uint IndexCount, uint StartIndexLocation, int BaseVertexLocation);
         [PreserveSig]
@@ -1032,11 +1054,11 @@ namespace D3D11
         [PreserveSig]
         void Unmap(ID3D11Resource pResource, uint Subresource);
         [PreserveSig]
-        void PSSetConstantBuffers(uint StartSlot, uint NumBuffers, ID3D11Buffer ppConstantBuffers);
+        void PSSetConstantBuffers(uint StartSlot, uint NumBuffers, [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] ID3D11Buffer[] ppConstantBuffers);
         [PreserveSig]
         void IASetInputLayout(ID3D11InputLayout pInputLayout);
         [PreserveSig]
-        void IASetVertexBuffers(uint StartSlot, uint NumBuffers, ID3D11Buffer ppVertexBuffers, uint pStrides, uint pOffsets);
+        void IASetVertexBuffers(uint StartSlot, uint NumBuffers, [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] ID3D11Buffer[] ppVertexBuffers, [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] uint[] pStrides, [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] uint[] pOffsets);
         [PreserveSig]
         void IASetIndexBuffer(ID3D11Buffer pIndexBuffer, DXGI_FORMAT Format, uint Offset);
         [PreserveSig]
@@ -1044,16 +1066,16 @@ namespace D3D11
         [PreserveSig]
         void DrawInstanced(uint VertexCountPerInstance, uint InstanceCount, uint StartVertexLocation, uint StartInstanceLocation);
         [PreserveSig]
-        void GSSetConstantBuffers(uint StartSlot, uint NumBuffers, ID3D11Buffer ppConstantBuffers);
+        void GSSetConstantBuffers(uint StartSlot, uint NumBuffers, [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] ID3D11Buffer[] ppConstantBuffers);
         [PreserveSig]
-        void GSSetShader(ID3D11GeometryShader pShader, ID3D11ClassInstance ppClassInstances, uint NumClassInstances);
+        void GSSetShader(ID3D11GeometryShader pShader, [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] ID3D11ClassInstance[] ppClassInstances, uint NumClassInstances);
+        [PreserveSig]
         //void IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY Topology);
-        [PreserveSig]
         void IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY Topology);
         [PreserveSig]
-        void VSSetShaderResources(uint StartSlot, uint NumViews, ID3D11ShaderResourceView ppShaderResourceViews);
+        void VSSetShaderResources(uint StartSlot, uint NumViews, [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] ID3D11ShaderResourceView[] ppShaderResourceViews);
         [PreserveSig]
-        void VSSetSamplers(uint StartSlot, uint NumSamplers, ID3D11SamplerState ppSamplers);
+        void VSSetSamplers(uint StartSlot, uint NumSamplers, [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] ID3D11SamplerState[] ppSamplers);
         [PreserveSig]
         void Begin(ID3D11Asynchronous pAsync);
         [PreserveSig]
@@ -1063,22 +1085,20 @@ namespace D3D11
         [PreserveSig]
         void SetPredication(ID3D11Predicate pPredicate, bool PredicateValue);
         [PreserveSig]
-        void GSSetShaderResources(uint StartSlot, uint NumViews, ID3D11ShaderResourceView ppShaderResourceViews);
+        void GSSetShaderResources(uint StartSlot, uint NumViews, [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] ID3D11ShaderResourceView[] ppShaderResourceViews);
         [PreserveSig]
-        void GSSetSamplers(uint StartSlot, uint NumSamplers, ID3D11SamplerState ppSamplers);
-        //void OMSetRenderTargets(uint NumViews, IntPtr ppRenderTargetViews, ID3D11DepthStencilView pDepthStencilView);
+        void GSSetSamplers(uint StartSlot, uint NumSamplers, [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] ID3D11SamplerState[] ppSamplers);
         [PreserveSig]
-        void OMSetRenderTargets(uint NumViews, [In, Out, MarshalAs(UnmanagedType.LPArray)] ID3D11RenderTargetView[] ppRenderTargetViews, ID3D11DepthStencilView pDepthStencilView);
+        void OMSetRenderTargets(uint NumViews, [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] ID3D11RenderTargetView[] ppRenderTargetViews, ID3D11DepthStencilView pDepthStencilView);
         [PreserveSig]
-        void OMSetRenderTargetsAndUnorderedAccessViews(uint NumRTVs, ID3D11RenderTargetView ppRenderTargetViews, ID3D11DepthStencilView pDepthStencilView,
-            uint UAVStartSlot, uint NumUAVs, ID3D11UnorderedAccessView ppUnorderedAccessViews, uint pUAVInitialCounts);
-        //   _In_opt_  const FLOAT BlendFactor[ 4 ],
+        void OMSetRenderTargetsAndUnorderedAccessViews(uint NumRTVs, [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] ID3D11RenderTargetView[] ppRenderTargetViews, ID3D11DepthStencilView pDepthStencilView,
+            uint UAVStartSlot, uint NumUAVs, [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 4)] ID3D11UnorderedAccessView[] ppUnorderedAccessViews, uint pUAVInitialCounts);
         [PreserveSig]
         void OMSetBlendState(ID3D11BlendState pBlendState, [In, Out, MarshalAs(UnmanagedType.LPArray)] float[] BlendFactor, uint SampleMask);
         [PreserveSig]
         void OMSetDepthStencilState(ID3D11DepthStencilState pDepthStencilState, uint StencilRef);
         [PreserveSig]
-        void SOSetTargets(uint NumBuffers, ID3D11Buffer ppSOTargets, uint pOffsets);
+        void SOSetTargets(uint NumBuffers, [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] ID3D11Buffer[] ppSOTargets, [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] uint[] pOffsets);
         [PreserveSig]
         void DrawAuto();
         [PreserveSig]
@@ -1092,28 +1112,24 @@ namespace D3D11
         [PreserveSig]
         void RSSetState(ID3D11RasterizerState pRasterizerState);
         [PreserveSig]
-        void RSSetViewports(uint NumViewports, [In, Out, MarshalAs(UnmanagedType.LPArray)] D3D11_VIEWPORT[] pViewports);
-        ////void RSSetScissorRects(uint NumRects, D3D11_RECT pRects);
+        void RSSetViewports(uint NumViewports, [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] D3D11_VIEWPORT[] pViewports);
         [PreserveSig]
-        void RSSetScissorRects(uint NumRects, ref RECT pRects);
+        void RSSetScissorRects(uint NumRects, [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] RECT[] pRects);
         [PreserveSig]
         void CopySubresourceRegion(ID3D11Resource pDstResource, uint DstSubresource, uint DstX, uint DstY, uint DstZ, ID3D11Resource pSrcResource, uint SrcSubresource, D3D11_BOX pSrcBox);
         [PreserveSig]
         void CopyResource(ID3D11Resource pDstResource, ID3D11Resource pSrcResource);
         [PreserveSig]
-        void UpdateSubresource(ID3D11Resource pDstResource, uint DstSubresource, D3D11_BOX pDstBox, IntPtr pSrcData, uint SrcRowPitch, uint SrcDepthPitch);
+        //void UpdateSubresource(ID3D11Resource pDstResource, uint DstSubresource, D3D11_BOX pDstBox, IntPtr pSrcData, uint SrcRowPitch, uint SrcDepthPitch);
+        void UpdateSubresource(ID3D11Resource pDstResource, uint DstSubresource, IntPtr pDstBox, IntPtr pSrcData, uint SrcRowPitch, uint SrcDepthPitch);
         [PreserveSig]
         void CopyStructureCount(ID3D11Buffer pDstBuffer, uint DstAlignedByteOffset, ID3D11UnorderedAccessView pSrcView);
-        // float ColorRGBA[ 4 ]
-        //void ClearRenderTargetView(ID3D11RenderTargetView pRenderTargetView, [In, Out, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 4)] float[] ColorRGBA);
         [PreserveSig]
         void ClearRenderTargetView(ID3D11RenderTargetView pRenderTargetView, [In, Out, MarshalAs(UnmanagedType.LPArray)] float[] ColorRGBA);
-        // uint Values[ 4 ]
-        [PreserveSig]
-        void ClearUnorderedAccessViewUint(ID3D11UnorderedAccessView pUnorderedAccessView, [In, Out, MarshalAs(UnmanagedType.LPArray)] uint[] Values);
-        // float Values[ 4 ]
-        [PreserveSig]
-        void ClearUnorderedAccessViewFloat(ID3D11UnorderedAccessView pUnorderedAccessView, [In, Out, MarshalAs(UnmanagedType.LPArray)] float[] Values);
+        [PreserveSig]        
+        void ClearUnorderedAccessViewuint(ID3D11UnorderedAccessView pUnorderedAccessView, uint[] Values);
+        [PreserveSig]        
+        void ClearUnorderedAccessViewfloat(ID3D11UnorderedAccessView pUnorderedAccessView, float[] Values);
         [PreserveSig]
         void ClearDepthStencilView(ID3D11DepthStencilView pDepthStencilView, uint ClearFlags, float Depth, byte Stencil);
         [PreserveSig]
@@ -1126,119 +1142,115 @@ namespace D3D11
         void ResolveSubresource(ID3D11Resource pDstResource, uint DstSubresource, ID3D11Resource pSrcResource, uint SrcSubresource, DXGI_FORMAT Format);
         [PreserveSig]
         void ExecuteCommandList(ID3D11CommandList pCommandList, bool RestoreContextState);
+        [PreserveSig]        
+        void HSSetShaderResources(uint StartSlot, uint NumViews, [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] ID3D11ShaderResourceView[] ppShaderResourceViews);
+        [PreserveSig]        
+        void HSSetShader(ID3D11HullShader pHullShader, [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] ID3D11ClassInstance[] ppClassInstances, uint NumClassInstances);
+        [PreserveSig]        
+        void HSSetSamplers(uint StartSlot, uint NumSamplers, [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] ID3D11SamplerState[] ppSamplers);
+        [PreserveSig]       
+        void HSSetConstantBuffers(uint StartSlot, uint NumBuffers, [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] ID3D11Buffer[] ppConstantBuffers);
+        [PreserveSig]       
+        void DSSetShaderResources(uint StartSlot, uint NumViews, [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] ID3D11ShaderResourceView[] ppShaderResourceViews);
+        [PreserveSig]      
+        void DSSetShader(ID3D11DomainShader pDomainShader, [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] ID3D11ClassInstance[] ppClassInstances, uint NumClassInstances);
+        [PreserveSig]        
+        void DSSetSamplers(uint StartSlot, uint NumSamplers, [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] ID3D11SamplerState[] ppSamplers);
+        [PreserveSig]       
+        void DSSetConstantBuffers(uint StartSlot, uint NumBuffers, [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] ID3D11Buffer[] ppConstantBuffers);
+        [PreserveSig]       
+        void CSSetShaderResources(uint StartSlot, uint NumViews, [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] ID3D11ShaderResourceView[] ppShaderResourceViews);
+        [PreserveSig]        
+        void CSSetUnorderedAccessViews(uint StartSlot, uint NumUAVs, [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] ID3D11UnorderedAccessView[] ppUnorderedAccessViews, [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] uint[] pUAVInitialCounts);
+        [PreserveSig]       
+        void CSSetShader(ID3D11ComputeShader pComputeShader, [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] ID3D11ClassInstance[] ppClassInstances, uint NumClassInstances);
+        [PreserveSig]        
+        void CSSetSamplers(uint StartSlot, uint NumSamplers, [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] ID3D11SamplerState[] ppSamplers);
+        [PreserveSig]       
+        void CSSetConstantBuffers(uint StartSlot, uint NumBuffers, [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] ID3D11Buffer[] ppConstantBuffers);
+        [PreserveSig]       
+        void VSGetConstantBuffers(uint StartSlot, uint NumBuffers, /* out optional ID3D11Buffer* */ IntPtr ppConstantBuffers);
+        [PreserveSig]       
+        void PSGetShaderResources(uint StartSlot, uint NumViews, /* out optional ID3D11ShaderResourceView* */ IntPtr ppShaderResourceViews);
         [PreserveSig]
-        void HSSetShaderResources(uint StartSlot, uint NumViews, ID3D11ShaderResourceView ppShaderResourceViews);
-        [PreserveSig]
-        void HSSetShader(ID3D11HullShader pHullShader, ID3D11ClassInstance ppClassInstances, uint NumClassInstances);
-        [PreserveSig]
-        void HSSetSamplers(uint StartSlot, uint NumSamplers, ID3D11SamplerState ppSamplers);
-        [PreserveSig]
-        void HSSetConstantBuffers(uint StartSlot, uint NumBuffers, ID3D11Buffer ppConstantBuffers);
-        [PreserveSig]
-        void DSSetShaderResources(uint StartSlot, uint NumViews, ID3D11ShaderResourceView ppShaderResourceViews);
-        [PreserveSig]
-        void DSSetShader(ID3D11DomainShader pDomainShader, ID3D11ClassInstance ppClassInstances, uint NumClassInstances);
-        [PreserveSig]
-        void DSSetSamplers(uint StartSlot, uint NumSamplers, ID3D11SamplerState ppSamplers);
-        [PreserveSig]
-        void DSSetConstantBuffers(uint StartSlot, uint NumBuffers, ID3D11Buffer ppConstantBuffers);
-        [PreserveSig]
-        void CSSetShaderResources(uint StartSlot, uint NumViews, ID3D11ShaderResourceView ppShaderResourceViews);
-        [PreserveSig]
-        void CSSetUnorderedAccessViews(uint StartSlot, uint NumUAVs, ID3D11UnorderedAccessView ppUnorderedAccessViews, uint pUAVInitialCounts);
-        [PreserveSig]
-        void CSSetShader(ID3D11ComputeShader pComputeShader, ID3D11ClassInstance ppClassInstances, uint NumClassInstances);
-        [PreserveSig]
-        void CSSetSamplers(uint StartSlot, uint NumSamplers, ID3D11SamplerState ppSamplers);
-        [PreserveSig]
-        void CSSetConstantBuffers(uint StartSlot, uint NumBuffers, ID3D11Buffer ppConstantBuffers);
-        [PreserveSig]
-        void VSGetConstantBuffers(uint StartSlot, uint NumBuffers, out ID3D11Buffer ppConstantBuffers);
-        [PreserveSig]
-        void PSGetShaderResources(uint StartSlot, uint NumViews, out ID3D11ShaderResourceView ppShaderResourceViews);
-        [PreserveSig]
-        void PSGetShader(out ID3D11PixelShader ppPixelShader, out ID3D11ClassInstance ppClassInstances, ref uint pNumClassInstances);
-        [PreserveSig]
-        void PSGetSamplers(uint StartSlot, uint NumSamplers, out ID3D11SamplerState ppSamplers);
-        [PreserveSig]
-        void VSGetShader(out ID3D11VertexShader ppVertexShader, out ID3D11ClassInstance ppClassInstances, ref uint pNumClassInstances);
-        [PreserveSig]
-        void PSGetConstantBuffers(uint StartSlot, uint NumBuffers, out ID3D11Buffer ppConstantBuffers);
+        void PSGetShader(out ID3D11PixelShader ppPixelShader, /* out optional ID3D11ClassInstance* */ IntPtr ppClassInstances, /* out optional uint* */ IntPtr pNumClassInstances);
+        [PreserveSig]        
+        void PSGetSamplers(uint StartSlot, uint NumSamplers, /* out optional ID3D11SamplerState* */ IntPtr ppSamplers);
+        [PreserveSig]       
+        void VSGetShader(out ID3D11VertexShader ppVertexShader, /* out optional ID3D11ClassInstance* */ IntPtr ppClassInstances, /* out optional uint* */ IntPtr pNumClassInstances);
+        [PreserveSig]        
+        void PSGetConstantBuffers(uint StartSlot, uint NumBuffers, /* out optional ID3D11Buffer* */ IntPtr ppConstantBuffers);
         [PreserveSig]
         void IAGetInputLayout(out ID3D11InputLayout ppInputLayout);
-        [PreserveSig]
-        void IAGetVertexBuffers(uint StartSlot, uint NumBuffers, out ID3D11Buffer ppVertexBuffers, out uint pStrides, out uint pOffsets);
+        [PreserveSig]       
+        void IAGetVertexBuffers(uint StartSlot, uint NumBuffers, /* out optional ID3D11Buffer* */ IntPtr ppVertexBuffers, [Out, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] uint[] pStrides, [Out, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] uint[] pOffsets);
         [PreserveSig]
         void IAGetIndexBuffer(out ID3D11Buffer pIndexBuffer, out DXGI_FORMAT Format, out uint Offset);
+        [PreserveSig]        
+        void GSGetConstantBuffers(uint StartSlot, uint NumBuffers, /* out optional ID3D11Buffer* */ IntPtr ppConstantBuffers);
+        [PreserveSig]        
+        void GSGetShader(out ID3D11GeometryShader ppGeometryShader, /* out optional ID3D11ClassInstance* */ IntPtr ppClassInstances, /* out optional uint* */ IntPtr pNumClassInstances);
         [PreserveSig]
-        void GSGetConstantBuffers(uint StartSlot, uint NumBuffers, out ID3D11Buffer ppConstantBuffers);
-        [PreserveSig]
-        void GSGetShader(out ID3D11GeometryShader ppGeometryShader, out ID3D11ClassInstance ppClassInstances, ref uint pNumClassInstances);
         //void IAGetPrimitiveTopology(out D3D11_PRIMITIVE_TOPOLOGY pTopology);
-        [PreserveSig]
         void IAGetPrimitiveTopology(out D3D_PRIMITIVE_TOPOLOGY pTopology);
-        [PreserveSig]
-        void VSGetShaderResources(uint StartSlot, uint NumViews, out ID3D11ShaderResourceView ppShaderResourceViews);
-        [PreserveSig]
-        void VSGetSamplers(uint StartSlot, uint NumSamplers, out ID3D11SamplerState ppSamplers);
+        [PreserveSig]        
+        void VSGetShaderResources(uint StartSlot, uint NumViews, /* out optional ID3D11ShaderResourceView* */ IntPtr ppShaderResourceViews);
+        [PreserveSig]        
+        void VSGetSamplers(uint StartSlot, uint NumSamplers, /* out optional ID3D11SamplerState* */ IntPtr ppSamplers);
         [PreserveSig]
         void GetPredication(out ID3D11Predicate ppPredicate, out bool pPredicateValue);
+        [PreserveSig]        
+        void GSGetShaderResources(uint StartSlot, uint NumViews, /* out optional ID3D11ShaderResourceView* */ IntPtr ppShaderResourceViews);
+        [PreserveSig]        
+        void GSGetSamplers(uint StartSlot, uint NumSamplers, /* out optional ID3D11SamplerState* */ IntPtr ppSamplers);
+        [PreserveSig] 
+        void OMGetRenderTargets(uint NumViews, /* out optional ID3D11RenderTargetView* */ IntPtr ppRenderTargetViews, out ID3D11DepthStencilView ppDepthStencilView);
         [PreserveSig]
-        void GSGetShaderResources(uint StartSlot, uint NumViews, out ID3D11ShaderResourceView ppShaderResourceViews);
+        void OMGetRenderTargetsAndUnorderedAccessViews(uint NumRTVs, /* out optional ID3D11RenderTargetView* */ IntPtr ppRenderTargetViews, out ID3D11DepthStencilView ppDepthStencilView, uint UAVStartSlot, uint NumUAVs, /* out optional ID3D11UnorderedAccessView* */ IntPtr ppUnorderedAccessViews);
         [PreserveSig]
-        void GSGetSamplers(uint StartSlot, uint NumSamplers, out ID3D11SamplerState ppSamplers);
-        [PreserveSig]
-        void OMGetRenderTargets(uint NumViews, out ID3D11RenderTargetView ppRenderTargetViews, out ID3D11DepthStencilView ppDepthStencilView);
-        [PreserveSig]
-        void OMGetRenderTargetsAndUnorderedAccessViews(uint NumRTVs, out ID3D11RenderTargetView ppRenderTargetViews, out ID3D11DepthStencilView ppDepthStencilView, uint UAVStartSlot, uint NumUAVs, out ID3D11UnorderedAccessView ppUnorderedAccessViews);
-        //  float BlendFactor[ 4 ]
-        //void OMGetBlendState(out ID3D11BlendState ppBlendState, out float[] BlendFactor, out uint pSampleMask);
-        //void OMGetBlendState(out ID3D11BlendState ppBlendState, [In, Out, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 4)] float[] BlendFactor, out uint pSampleMask);
-        [PreserveSig]
-        void OMGetBlendState(out ID3D11BlendState ppBlendState, out IntPtr BlendFactor, out uint pSampleMask);
+        void OMGetBlendState(out ID3D11BlendState ppBlendState, [In, Out, MarshalAs(UnmanagedType.LPArray)] float[] BlendFactor, /* out optional uint* */ IntPtr pSampleMask);
         [PreserveSig]
         void OMGetDepthStencilState(out ID3D11DepthStencilState ppDepthStencilState, out uint pStencilRef);
-        [PreserveSig]
-        void SOGetTargets(uint NumBuffers, out ID3D11Buffer ppSOTargets);
+        [PreserveSig]        
+        void SOGetTargets(uint NumBuffers, /* out optional ID3D11Buffer* */ IntPtr ppSOTargets);
         [PreserveSig]
         void RSGetState(out ID3D11RasterizerState ppRasterizerState);
+        [PreserveSig]        
+        void RSGetViewports(ref uint pNumViewports, [Out, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] D3D11_VIEWPORT[] pViewports);
+        [PreserveSig]        
+        void RSGetScissorRects(ref uint pNumRects, [Out, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] RECT[] pRects);
+        [PreserveSig]        
+        void HSGetShaderResources(uint StartSlot, uint NumViews, /* out optional ID3D11ShaderResourceView* */ IntPtr ppShaderResourceViews);
+        [PreserveSig]       
+        void HSGetShader(out ID3D11HullShader ppHullShader, /* out optional ID3D11ClassInstance* */ IntPtr ppClassInstances, /* out optional uint* */ IntPtr pNumClassInstances);
+        [PreserveSig]        
+        void HSGetSamplers(uint StartSlot, uint NumSamplers, /* out optional ID3D11SamplerState* */ IntPtr ppSamplers);
+        [PreserveSig]        
+        void HSGetConstantBuffers(uint StartSlot, uint NumBuffers, /* out optional ID3D11Buffer* */ IntPtr ppConstantBuffers);
+        [PreserveSig]        
+        void DSGetShaderResources(uint StartSlot, uint NumViews, /* out optional ID3D11ShaderResourceView* */ IntPtr ppShaderResourceViews);
         [PreserveSig]
-        void RSGetViewports(ref uint pNumViewports, out D3D11_VIEWPORT pViewports);
-        //void RSGetScissorRects(ref uint pNumRects, out D3D11_RECT pRects);
+        void DSGetShader(out ID3D11DomainShader ppDomainShader, /* out optional ID3D11ClassInstance* */ IntPtr ppClassInstances, /* out optional uint* */ IntPtr pNumClassInstances);
+        [PreserveSig]       
+        void DSGetSamplers(uint StartSlot, uint NumSamplers, /* out optional ID3D11SamplerState* */ IntPtr ppSamplers);
+        [PreserveSig]        
+        void DSGetConstantBuffers(uint StartSlot, uint NumBuffers, /* out optional ID3D11Buffer* */ IntPtr ppConstantBuffers);
+        [PreserveSig]        
+        void CSGetShaderResources(uint StartSlot, uint NumViews, /* out optional ID3D11ShaderResourceView* */ IntPtr ppShaderResourceViews);
+        [PreserveSig]        
+        void CSGetUnorderedAccessViews(uint StartSlot, uint NumUAVs, /* out optional ID3D11UnorderedAccessView* */ IntPtr ppUnorderedAccessViews);
         [PreserveSig]
-        void RSGetScissorRects(ref uint pNumRects, out RECT pRects);
-        [PreserveSig]
-        void HSGetShaderResources(uint StartSlot, uint NumViews, out ID3D11ShaderResourceView ppShaderResourceViews);
-        [PreserveSig]
-        void HSGetShader(out ID3D11HullShader ppHullShader, out ID3D11ClassInstance ppClassInstances, ref uint pNumClassInstances);
-        [PreserveSig]
-        void HSGetSamplers(uint StartSlot, uint NumSamplers, out ID3D11SamplerState ppSamplers);
-        [PreserveSig]
-        void HSGetConstantBuffers(uint StartSlot, uint NumBuffers, out ID3D11Buffer ppConstantBuffers);
-        [PreserveSig]
-        void DSGetShaderResources(uint StartSlot, uint NumViews, out ID3D11ShaderResourceView ppShaderResourceViews);
-        [PreserveSig]
-        void DSGetShader(out ID3D11DomainShader ppDomainShader, out ID3D11ClassInstance ppClassInstances, ref uint pNumClassInstances);
-        [PreserveSig]
-        void DSGetSamplers(uint StartSlot, uint NumSamplers, out ID3D11SamplerState ppSamplers);
-        [PreserveSig]
-        void DSGetConstantBuffers(uint StartSlot, uint NumBuffers, out ID3D11Buffer ppConstantBuffers);
-        [PreserveSig]
-        void CSGetShaderResources(uint StartSlot, uint NumViews, out ID3D11ShaderResourceView ppShaderResourceViews);
-        [PreserveSig]
-        void CSGetUnorderedAccessViews(uint StartSlot, uint NumUAVs, out ID3D11UnorderedAccessView ppUnorderedAccessViews);
-        [PreserveSig]
-        void CSGetShader(out ID3D11ComputeShader ppComputeShader, out ID3D11ClassInstance ppClassInstances, ref uint pNumClassInstances);
-        [PreserveSig]
-        void CSGetSamplers(uint StartSlot, uint NumSamplers, out ID3D11SamplerState ppSamplers);
-        [PreserveSig]
-        void CSGetConstantBuffers(uint StartSlot, uint NumBuffers, out ID3D11Buffer ppConstantBuffers);
+        void CSGetShader(out ID3D11ComputeShader ppComputeShader, /* out optional ID3D11ClassInstance* */ IntPtr ppClassInstances, /* out optional uint* */ IntPtr pNumClassInstances);
+        [PreserveSig]        
+        void CSGetSamplers(uint StartSlot, uint NumSamplers, /* out optional ID3D11SamplerState* */ IntPtr ppSamplers);
+        [PreserveSig]        
+        void CSGetConstantBuffers(uint StartSlot, uint NumBuffers, /* out optional ID3D11Buffer* */ IntPtr ppConstantBuffers);
         [PreserveSig]
         void ClearState();
         [PreserveSig]
         void Flush();
         [PreserveSig]
-        D3D11_DEVICE_CONTEXT_TYPE GetType();
+        void GetType(out D3D11_DEVICE_CONTEXT_TYPE deviceContextType);
         [PreserveSig]
         uint GetContextFlags();
         [PreserveSig]
@@ -1382,9 +1394,10 @@ namespace D3D11
         [PreserveSig]
         HRESULT CreateRenderTargetView(ID3D11Resource pResource, IntPtr pDesc, out ID3D11RenderTargetView ppRTView);
         [PreserveSig]
-        HRESULT CreateDepthStencilView(ID3D11Resource pResource, D3D11_DEPTH_STENCIL_VIEW_DESC pDesc, out ID3D11DepthStencilView ppDepthStencilView);
+        HRESULT CreateDepthStencilView(ID3D11Resource pResource, IntPtr pDesc, out ID3D11DepthStencilView ppDepthStencilView);
         [PreserveSig]
-        HRESULT CreateInputLayout(ref D3D11_INPUT_ELEMENT_DESC pInputElementDescs, uint NumElements, IntPtr pShaderBytecodeWithInputSignature, uint BytecodeLength, out ID3D11InputLayout ppInputLayout);
+        HRESULT CreateInputLayout([MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] D3D11_INPUT_ELEMENT_DESC[] pInputElementDescs,
+             uint NumElements, IntPtr pShaderBytecodeWithInputSignature, IntPtr BytecodeLength, out ID3D11InputLayout ppInputLayout);
         [PreserveSig]
         HRESULT CreateVertexShader(IntPtr pShaderBytecode, uint BytecodeLength, ID3D11ClassLinkage pClassLinkage, out ID3D11VertexShader ppVertexShader);
         [PreserveSig]
@@ -2753,9 +2766,10 @@ namespace D3D11
         [PreserveSig]
         new HRESULT CreateRenderTargetView(ID3D11Resource pResource, IntPtr pDesc, out ID3D11RenderTargetView ppRTView);
         [PreserveSig]
-        new HRESULT CreateDepthStencilView(ID3D11Resource pResource, D3D11_DEPTH_STENCIL_VIEW_DESC pDesc, out ID3D11DepthStencilView ppDepthStencilView);
+        new HRESULT CreateDepthStencilView(ID3D11Resource pResource, IntPtr pDesc, out ID3D11DepthStencilView ppDepthStencilView);
         [PreserveSig]
-        new HRESULT CreateInputLayout(ref D3D11_INPUT_ELEMENT_DESC pInputElementDescs, uint NumElements, IntPtr pShaderBytecodeWithInputSignature, uint BytecodeLength, out ID3D11InputLayout ppInputLayout);
+        new HRESULT CreateInputLayout([MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] D3D11_INPUT_ELEMENT_DESC[] pInputElementDescs,
+             uint NumElements, IntPtr pShaderBytecodeWithInputSignature, IntPtr BytecodeLength, out ID3D11InputLayout ppInputLayout);
         [PreserveSig]
         new HRESULT CreateVertexShader(IntPtr pShaderBytecode, uint BytecodeLength, ID3D11ClassLinkage pClassLinkage, out ID3D11VertexShader ppVertexShader);
         [PreserveSig]
@@ -3071,5 +3085,32 @@ namespace D3D11
         D3D11_CONTENT_PROTECTION_CAPS_HARDWARE_TEARDOWN = 0x2000,
         D3D11_CONTENT_PROTECTION_CAPS_HARDWARE_DRM_COMMUNICATION = 0x4000,
         D3D11_CONTENT_PROTECTION_CAPS_HARDWARE_DRM_COMMUNICATION_MULTI_THREADED = 0x8000
-    } 
+    }
+
+    public enum D3D11_MAP_FLAG
+    {
+        D3D11_MAP_FLAG_DO_NOT_WAIT = 0x100000
+    }
+
+    public enum D3D11_RAISE_FLAG
+    {
+        D3D11_RAISE_FLAG_DRIVER_INTERNAL_ERROR = 0x1
+    }
+
+    public enum D3D11_CLEAR_FLAG
+    {
+        D3D11_CLEAR_DEPTH = 0x1,
+        D3D11_CLEAR_STENCIL = 0x2
+    }
+
+    [ComImport, Guid("8BA5FB08-5195-40e2-AC58-0D989C3A0102")]
+    [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+    public interface ID3DBlob
+    {
+        [PreserveSig]
+        IntPtr GetBufferPointer();
+        [PreserveSig]
+        IntPtr GetBufferSize(); // SIZE_T
+    }
+
 }

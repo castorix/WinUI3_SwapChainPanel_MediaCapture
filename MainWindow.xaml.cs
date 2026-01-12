@@ -138,12 +138,12 @@ namespace WinUI3_SwapChainPanel_MediaCapture
             m_pWICImagingFactory = (IWICImagingFactory)Activator.CreateInstance(Type.GetTypeFromCLSID(WICTools.CLSID_WICImagingFactory));
             m_pWICImagingFactory2 = (IWICImagingFactory2)m_pWICImagingFactory;
             HRESULT hr = CreateD2D1Factory();
-            if (hr == HRESULT.S_OK)
+            if (SUCCEEDED(hr))
             {
                 hr = CreateDeviceContext();
                 hr = CreateDeviceResources();
                 hr = CreateSwapChain(IntPtr.Zero);
-                if (hr == HRESULT.S_OK)
+                if (SUCCEEDED(hr))
                 {
                     hr = ConfigureSwapChain(hWndMain);
                     ISwapChainPanelNative panelNative = WinRT.CastExtensions.As<ISwapChainPanelNative>(scp1);
@@ -292,7 +292,7 @@ namespace WinUI3_SwapChainPanel_MediaCapture
                             // D3D11 ERROR: ID3D11Device::OpenSharedResource: Returning E_INVALIDARG, meaning invalid parameters were passed. [ STATE_CREATION ERROR #381: DEVICE_OPEN_SHARED_RESOURCE_INVALIDARG_RETURN]
                             ID3D11Device pD3D11Device = Marshal.GetObjectForIUnknown(m_pD3D11DevicePtr) as ID3D11Device;
                             hr = pD3D11Device.OpenSharedResource(m_SharedHandle, typeof(D3D11.ID3D11Texture2D).GUID, out IntPtr texturePtr);
-                            if (hr == HRESULT.S_OK)
+                            if (SUCCEEDED(hr))
                             {
                                 D3D11.ID3D11Texture2D pSharedTextureMainThread = Marshal.GetObjectForIUnknown(texturePtr) as D3D11.ID3D11Texture2D;
                                 IDXGISurface pDXGISurface = pSharedTextureMainThread as IDXGISurface;
@@ -309,12 +309,12 @@ namespace WinUI3_SwapChainPanel_MediaCapture
 
                                 //ID2D1ColorContext1 pD2D1ColorContext1 = null;
                                 //hr = m_pD2DDeviceContext5.CreateColorContextFromDxgiColorSpace(DXGI_COLOR_SPACE_TYPE.DXGI_COLOR_SPACE_RGB_FULL_G22_NONE_P709, out pD2D1ColorContext1);
-                                //if (hr == HRESULT.S_OK && pD2D1ColorContext1 != null)
+                                //if (SUCCEEDED(hr) && pD2D1ColorContext1 != null)
                                 //    bitmapProperties.colorContext = pD2D1ColorContext1;                               
 
                                 ID2D1Bitmap1 pD2DBitmap1;
                                 hr = m_pD2DDeviceContext.CreateBitmapFromDxgiSurface(pDXGISurface, bitmapProperties, out pD2DBitmap1);
-                                if (hr == HRESULT.S_OK && pD2DBitmap1 != null)
+                                if (SUCCEEDED(hr) && pD2DBitmap1 != null)
                                 {
                                     pD2DBitmap1.GetSize(out sizeBmpBackground);
 
@@ -1142,7 +1142,7 @@ namespace WinUI3_SwapChainPanel_MediaCapture
                                 Guid guid = typeof(D3D11.ID3D11Texture2D).GUID;
                                 hr = dia.GetInterface(guid, out pTexturePtr);
                                 D3D11.ID3D11Texture2D pOriginalTexture = null;
-                                if (hr == HRESULT.S_OK && pTexturePtr != IntPtr.Zero)
+                                if (SUCCEEDED(hr) && pTexturePtr != IntPtr.Zero)
                                 {
                                     pOriginalTexture = (D3D11.ID3D11Texture2D)Marshal.GetObjectForIUnknown(pTexturePtr);
                                     Marshal.Release(pTexturePtr);                                                                   
@@ -1166,11 +1166,11 @@ namespace WinUI3_SwapChainPanel_MediaCapture
                                             if (!m_bInitTexture)
                                             {
                                                 hr = pD3D11Device.CreateTexture2D(ref textureDesc, IntPtr.Zero, out m_pSharedTexture);
-                                                if (hr == HRESULT.S_OK)
+                                                if (SUCCEEDED(hr))
                                                     m_bInitTexture = true;
                                             }
 
-                                            if (hr == HRESULT.S_OK)
+                                            if (SUCCEEDED(hr))
                                             {
                                                 D3D11.ID3D11DeviceContext pD3D11DeviceContext = null;
                                                 pD3D11Device.GetImmediateContext(out pD3D11DeviceContext);
@@ -1185,7 +1185,7 @@ namespace WinUI3_SwapChainPanel_MediaCapture
                                                     {
                                                         IDXGIResource pDXGIResource = m_pSharedTexture as IDXGIResource;
                                                         hr = pDXGIResource.GetSharedHandle(out m_SharedHandle);
-                                                        if (hr == HRESULT.S_OK)
+                                                        if (SUCCEEDED(hr))
                                                         {
                                                            
                                                         }
@@ -1238,7 +1238,7 @@ namespace WinUI3_SwapChainPanel_MediaCapture
                             IntPtr pDXGISurfacePtr = IntPtr.Zero;
                             Guid idxgiSurfaceGuid = typeof(IDXGISurface).GUID;
                             HRESULT hr = dia.GetInterface(idxgiSurfaceGuid, out pDXGISurfacePtr);
-                            if (hr == HRESULT.S_OK)
+                            if (SUCCEEDED(hr))
                             {
                                 IDXGISurface pDXGISurface = Marshal.GetObjectForIUnknown(pDXGISurfacePtr) as IDXGISurface;
 
@@ -1250,7 +1250,7 @@ namespace WinUI3_SwapChainPanel_MediaCapture
                                 IntPtr pDevicePtr = IntPtr.Zero;
                                 Guid IID_ID3D11Device = typeof(ID3D11Device).GUID;
                                 hr = pDXGISurface.GetDevice(IID_ID3D11Device, out pDevicePtr);
-                                if (hr == HRESULT.S_OK)
+                                if (SUCCEEDED(hr))
                                 {
                                     ID3D11Device pD3D11Device = Marshal.GetObjectForIUnknown(pDevicePtr) as ID3D11Device;
                                     if (pD3D11Device != null)
@@ -1273,7 +1273,7 @@ namespace WinUI3_SwapChainPanel_MediaCapture
                                             hr = pD3D11Device.CreateTexture2D(ref textureDesc, IntPtr.Zero, out m_pSharedTexture);
                                         else
                                             m_bInitTexture = true;
-                                        if (hr == HRESULT.S_OK)
+                                        if (SUCCEEDED(hr))
                                         {
                                             D3D11.ID3D11DeviceContext pD3D11DeviceContext = null;
                                             pD3D11Device.GetImmediateContext(out pD3D11DeviceContext);
@@ -1300,7 +1300,7 @@ namespace WinUI3_SwapChainPanel_MediaCapture
                                                 hr = pD3D11VideoDevice.CreateVideoProcessorEnumerator(ref contentDesc, out m_pVideoProcessorEnumerator);
                                             else
                                                 m_bInitVideoProcessorEnumerator = true;
-                                            if (hr == HRESULT.S_OK)
+                                            if (SUCCEEDED(hr))
                                             {
                                                 //                                     //uint nFlags;
                                                 //                                     //hr = pVideoProcessorEnum.CheckVideoProcessorFormat(desc.Format, out nFlags);
@@ -1382,7 +1382,7 @@ namespace WinUI3_SwapChainPanel_MediaCapture
                                                     hr = pD3D11VideoDevice.CreateVideoProcessor(m_pVideoProcessorEnumerator, 0, out m_pVideoProcessor);
                                                 else
                                                     m_bInitVideoProcessor = true;
-                                                if (hr == HRESULT.S_OK)
+                                                if (SUCCEEDED(hr))
                                                 {
                                                     IntPtr pVideoContextPtr = IntPtr.Zero;
                                                     Guid videoContextGuid = new Guid("61F21C45-3C0E-4a74-9CEA-67100D9AD5E4");
@@ -1397,7 +1397,7 @@ namespace WinUI3_SwapChainPanel_MediaCapture
                                                     };
                                                     ID3D11VideoProcessorInputView pInputView = null;
                                                     hr = pD3D11VideoDevice.CreateVideoProcessorInputView(pOriginalTexture, m_pVideoProcessorEnumerator, ref inputViewDesc, out pInputView);
-                                                    if (hr == HRESULT.S_OK)
+                                                    if (SUCCEEDED(hr))
                                                     {
                                                         // Does nothing ?
                                                         //D3D11_VIDEO_PROCESSOR_FILTER_RANGE pRange = new D3D11_VIDEO_PROCESSOR_FILTER_RANGE();
@@ -1452,7 +1452,7 @@ namespace WinUI3_SwapChainPanel_MediaCapture
 
                                                         ID3D11VideoProcessorOutputView pOutputView = null;
                                                         hr = pD3D11VideoDevice.CreateVideoProcessorOutputView(m_pSharedTexture, m_pVideoProcessorEnumerator, ref outputViewDesc, out pOutputView);
-                                                        if (hr == HRESULT.S_OK)
+                                                        if (SUCCEEDED(hr))
                                                         {
                                                             // Does Nothing...
                                                             // float gamma = 22.2f;
@@ -1486,12 +1486,12 @@ namespace WinUI3_SwapChainPanel_MediaCapture
                                                 }                                               
                                             }
                                             SafeRelease(ref pD3D11VideoDevice);
-                                            if (hr == HRESULT.S_OK && m_pSharedTexture != null)
+                                            if (SUCCEEDED(hr) && m_pSharedTexture != null)
                                             {
                                                 IDXGIResource dxgiResource = m_pSharedTexture as IDXGIResource;
                                                 hr = dxgiResource.GetSharedHandle(out m_SharedHandle);
                                                 //pD3D11DeviceContext.Flush();
-                                                if (hr != HRESULT.S_OK)
+                                                if (!SUCCEEDED(hr))
                                                 {
                                                     //int i = 1;
                                                 }
@@ -2357,14 +2357,14 @@ namespace WinUI3_SwapChainPanel_MediaCapture
                 out featureLevel,         // returns feature level of device created            
                 out m_pD3D11DeviceContext // returns the device immediate context
             );
-            if (hr == HRESULT.S_OK)
+            if (SUCCEEDED(hr))
             {
                 m_pDXGIDevice = Marshal.GetObjectForIUnknown(m_pD3D11DevicePtr) as IDXGIDevice1;
                 if (m_pD2DFactory1 != null)
                 {
                     ID2D1Device pD2DDevice = null;
                     hr = m_pD2DFactory1.CreateDevice(m_pDXGIDevice, out pD2DDevice);
-                    if (hr == HRESULT.S_OK)
+                    if (SUCCEEDED(hr))
                     {
                         hr = pD2DDevice.CreateDeviceContext(D2D1_DEVICE_CONTEXT_OPTIONS.D2D1_DEVICE_CONTEXT_OPTIONS_NONE, out m_pD2DDeviceContext);
                         if (m_pD2DDeviceContext != null)
@@ -2398,11 +2398,11 @@ namespace WinUI3_SwapChainPanel_MediaCapture
 
             IDXGIAdapter pDXGIAdapter;
             hr = m_pDXGIDevice.GetAdapter(out pDXGIAdapter);
-            if (hr == HRESULT.S_OK)
+            if (SUCCEEDED(hr))
             {
                 IntPtr pDXGIFactory2Ptr;
                 hr = pDXGIAdapter.GetParent(typeof(IDXGIFactory2).GUID, out pDXGIFactory2Ptr);
-                if (hr == HRESULT.S_OK)
+                if (SUCCEEDED(hr))
                 {
                     IDXGIFactory2 pDXGIFactory2 = Marshal.GetObjectForIUnknown(pDXGIFactory2Ptr) as IDXGIFactory2;
                     if (hWnd != IntPtr.Zero)
@@ -2410,7 +2410,7 @@ namespace WinUI3_SwapChainPanel_MediaCapture
                     else
                         hr = pDXGIFactory2.CreateSwapChainForComposition(m_pD3D11DevicePtr, ref swapChainDesc, null, out m_pDXGISwapChain1);
 
-                    if (hr == HRESULT.S_OK)
+                    if (SUCCEEDED(hr))
                     {
                         hr = m_pDXGIDevice.SetMaximumFrameLatency(1);
                     }
@@ -2439,11 +2439,11 @@ namespace WinUI3_SwapChainPanel_MediaCapture
             bitmapProperties.dpiY = nDPI;
             IntPtr pDXGISurfacePtr = IntPtr.Zero;
             hr = m_pDXGISwapChain1.GetBuffer(0, typeof(IDXGISurface).GUID, out pDXGISurfacePtr);
-            if (hr == HRESULT.S_OK)
+            if (SUCCEEDED(hr))
             {
                 IDXGISurface pDXGISurface = Marshal.GetObjectForIUnknown(pDXGISurfacePtr) as IDXGISurface;
                 hr = m_pD2DDeviceContext.CreateBitmapFromDxgiSurface(pDXGISurface, ref bitmapProperties, out m_pD2DTargetBitmap);
-                if (hr == HRESULT.S_OK)
+                if (SUCCEEDED(hr))
                 {
                     m_pD2DDeviceContext.SetTarget(m_pD2DTargetBitmap);
                 }
@@ -2505,19 +2505,19 @@ namespace WinUI3_SwapChainPanel_MediaCapture
             IWICBitmapScaler pScaler = null;
 
             hr = pIWICFactory.CreateDecoderFromFilename(uri, Guid.Empty, unchecked((int)GENERIC_READ), WICDecodeOptions.WICDecodeMetadataCacheOnLoad, out pDecoder);
-            if (hr == HRESULT.S_OK)
+            if (SUCCEEDED(hr))
             {
                 hr = pDecoder.GetFrame(0, out pSource);
-                if (hr == HRESULT.S_OK)
+                if (SUCCEEDED(hr))
                 {
                     hr = pIWICFactory.CreateFormatConverter(out pConverter);
-                    if (hr == HRESULT.S_OK)
+                    if (SUCCEEDED(hr))
                     {
                         if (destinationWidth != 0 || destinationHeight != 0)
                         {
                             uint originalWidth, originalHeight;
                             hr = pSource.GetSize(out originalWidth, out originalHeight);
-                            if (hr == HRESULT.S_OK)
+                            if (SUCCEEDED(hr))
                             {
                                 if (destinationWidth == 0)
                                 {
@@ -2530,10 +2530,10 @@ namespace WinUI3_SwapChainPanel_MediaCapture
                                     destinationHeight = (uint)(scalar * (float)(originalHeight));
                                 }
                                 hr = pIWICFactory.CreateBitmapScaler(out pScaler);
-                                if (hr == HRESULT.S_OK)
+                                if (SUCCEEDED(hr))
                                 {
                                     hr = pScaler.Initialize(pSource, destinationWidth, destinationHeight, WICBitmapInterpolationMode.WICBitmapInterpolationModeCubic);
-                                    if (hr == HRESULT.S_OK)
+                                    if (SUCCEEDED(hr))
                                     {
                                         hr = pConverter.Initialize(pScaler, GUID_WICPixelFormat32bppPBGRA, WICBitmapDitherType.WICBitmapDitherTypeNone, null, 0.0f, WICBitmapPaletteType.WICBitmapPaletteTypeMedianCut);
                                         //hr = pConverter.Initialize(pScaler, GUID_WICPixelFormat32bppBGRA, WICBitmapDitherType.WICBitmapDitherTypeNone, null, 0.0f, WICBitmapPaletteType.WICBitmapPaletteTypeMedianCut);
